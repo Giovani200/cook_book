@@ -14,3 +14,27 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+<!-- j'ai créer les dossiers 
+- assets
+    - font, 
+    - img 
+    
+- lib
+    - common
+        -color_extension.dart 
+
+- view
+    - home
+    - login
+        -welcome_view.dart
+
+- main_tabview
+
+- on_bording
+    - startup_view.dart
+
+
+J'ai aussi modifié les fichiers main.dart et puibsec.yaml
+ -->
