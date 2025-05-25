@@ -38,3 +38,13 @@ samples, guidance on mobile development, and a full API reference.
 
 J'ai aussi modifié les fichiers main.dart et puibsec.yaml
  -->
+
+
+ # Palette de couleurs
+Ambiance “maison” et végétale : le tomaté et le sauge rappellent les légumes frais 
+et la cuisine familiale.
+
+Contrastes doux : la moutarde apporte de la gaieté sans agresser la rétine,
+le chocolat foncé assure une bonne lisibilité.
+
+Flexibilité : les neutres (crème, gris) équilibrent pour éviter un rendu trop coloré.

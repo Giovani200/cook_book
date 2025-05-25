@@ -72,17 +72,23 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Metropolis
+    - family: Playfair Display
       fonts:
-        - asset: assets/font/metropolis.regular.otf
-        - asset: assets/font/metropolis.medium.otf
-          weight: 500
-        - asset: assets/font/metropolis.semi-bold.otf
-          weight: 600
-        - asset: assets/font/metropolis.bold.otf
+        - asset: assets/font/playfair-display.regular.ttf
+          weight: 400
+        - asset: assets/font/playfair-display.bold.ttf
           weight: 700
-        - asset: assets/font/metropolis.extra-bold.otf
-          weight: 800
+    - family: Raleway
+      fonts:
+        - asset: assets/font/raleway.extralight.ttf
+          weight: 200
+        - asset: assets/font/raleway.light.ttf
+          weight: 300
+        - asset: assets/font/raleway.medium.ttf
+          weight: 500
+        - asset: assets/font/raleway.semibold.ttf
+          weight: 600
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
