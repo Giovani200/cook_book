@@ -1,7 +1,6 @@
 import 'package:cook_book/common/color_extension.dart';
 import 'package:cook_book/common_widget/round_button.dart';
-import 'package:cook_book/view/login/welcome_view.dart';
-import 'package:flutter/material.dart';
+import 'package:cook_book/view/login/welcome_view.dart';import 'package:flutter/material.dart';
 
 /// Widget représentant l'écran de démarrage (Startup)
 class StartupView extends StatefulWidget {
@@ -18,10 +17,15 @@ class _StartupViewState extends State<StartupView> {
     goWelcomPage();
   }
 
-  void goWelcomPage() async {
-    // Simule un délai de 2 secondes avant de naviguer vers la page d'accueil
-    await Future.delayed(const Duration(seconds: 2));
-  }
+ void goWelcomPage() async {
+  // Simule un délai de 2 secondes avant de naviguer vers la page d'accueil
+  await Future.delayed(const Duration(seconds: 2));
+  // Navigue vers la page WelcomeView après le délai
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => const WelcomeView()),
+  );
+}
 
   void welcomePage() {
     Navigator.push(

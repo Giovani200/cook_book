@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Demo', // Titre de l'application
       debugShowCheckedModeBanner: false, // Désactive la bannière de débogage
       theme: ThemeData(
         fontFamily: "Metropolis",
