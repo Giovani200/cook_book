@@ -4,6 +4,7 @@ import 'package:cook_book/view/login/sing_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/common/color_extension.dart';
 import 'package:cook_book/common_widget/round_textfield.dart';
+import 'package:cook_book/view/main_tabview/main_tabview.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -52,7 +53,17 @@ class _LoginViewState extends State<LoginView> {
                 obscureText: true,
               ),
               const SizedBox(height: 25),
-              RoundButton(title: "Login", onPressed: () {}),
+              RoundButton(
+                title: "Login", 
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainTabview(),
+                    ),
+                  );
+                }
+              ),
               const SizedBox(height: 3),
 
               //forgot
