@@ -1,3 +1,4 @@
+import 'package:cook_book/view/main_tabview/main_tabview.dart';
 import 'package:cook_book/view/on_boarding/startup_view.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const StartupView(), // je l'ai changé selon le tuto
+      home: const MainTabview(), // je l'ai changé selon le tuto
     );
   }
 }
