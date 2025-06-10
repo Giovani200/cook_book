@@ -1,6 +1,8 @@
 import 'package:cook_book/common/color_extension.dart';
 import 'package:cook_book/view/home/home_view.dart';
+import 'package:cook_book/view/home/menu_view.dart';
 import 'package:flutter/material.dart';
+import 'package:cook_book/view/home/add_recipe_view.dart';
 
 class MainTabview extends StatefulWidget {
   const MainTabview({super.key});
@@ -47,18 +49,20 @@ class _MainTabviewState extends State<MainTabview> {
           children: [
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_home.png",
+                "assets/img/tab_menu.webp",
                 width: 30,
                 height: 30,
-                color: selectTab == 0 ? TColor.primary : TColor.placeholder,
+                // color: selectTab == 0 ? TColor.primary : TColor.placeholder,
               ),
               onPressed: () {
-                selectTab = 0;
-                selectPageView = const Center(child: Text("Search"));
-                if (mounted) {
-                  setState(() {});
-                }
-              },
+            if (selectTab != 2) {
+              selectTab = 2;
+              selectPageView = const MenuView();
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
             ),
             IconButton(
               icon: Image.asset(
@@ -69,7 +73,7 @@ class _MainTabviewState extends State<MainTabview> {
               ),
               onPressed: () {
                 selectTab = 1;
-                selectPageView = const Center(child: Text("Favorite"));
+                selectPageView = const AddRecipeView();
                 if (mounted) {
                   setState(() {});
                 }
