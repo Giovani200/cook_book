@@ -16,6 +16,59 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> _handleLogin() async {
+    if (txtEmail.text.isEmpty || txtPassword.text.isEmpty) {
+      _showErrorDialog('Veuillez remplir tous les champs');
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Simuler une vérification de connexion
+      await Future.delayed(const Duration(seconds: 1));
+      
+      setState(() {
+        isLoading = false;
+      });
+
+      // Rediriger vers l'accueil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainTabview(),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      _showErrorDialog('Erreur de connexion');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Erreur'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -54,15 +107,8 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 25),
               RoundButton(
-                title: "Login", 
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainTabview(),
-                    ),
-                  );
-                }
+                title: isLoading ? "Connexion..." : "Login", 
+                onPressed: isLoading ? () {} : _handleLogin,
               ),
               const SizedBox(height: 3),
 

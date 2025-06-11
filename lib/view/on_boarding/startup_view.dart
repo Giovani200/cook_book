@@ -44,13 +44,13 @@ class _StartupViewState extends State<StartupView> {
         children: [
           // Image de fond
           Image.asset(
-            "assets/img/createur-de-contenu-alimentaire-filmant-une-variete-de-plats-a-telecharger-sur-internet.jpg",
+            "assets/img/background_startup.jpg", // Nom plus simple
             width: media.width,
             height: media.height,
             fit: BoxFit.cover,
           ),
           Image.asset(
-            "assets/img/un-personnage-3d-emergeant-d-un-smartphone.jpg",
+            "assets/img/character_3d.jpg", // Nom plus simple
             width: media.width * 0.55,
             height: media.height * 0.55,
             fit: BoxFit.contain,

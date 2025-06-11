@@ -1,40 +1,70 @@
-import 'package:cook_book/view/main_tabview/main_tabview.dart';
 import 'package:cook_book/view/on_boarding/startup_view.dart';
 import 'package:flutter/material.dart';
+import 'package:cook_book/common/app_colors.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo', // Titre de l'application
-      debugShowCheckedModeBanner: false, // Désactive la bannière de débogage
+      title: 'Cook Book',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: "Metropolis",
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: "Raleway",
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          primary: AppColors.primary,
+          secondary: AppColors.secondary,
+          background: AppColors.background,
+        ),
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(
+            fontFamily: 'Playfair Display',
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Playfair Display',
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+          bodyLarge: TextStyle(
+            fontFamily: 'Raleway',
+            color: AppColors.textPrimary,
+          ),
+          bodyMedium: TextStyle(
+            fontFamily: 'Raleway',
+            color: AppColors.textSecondary,
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Playfair Display',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            textStyle: TextStyle(
+              fontFamily: 'Raleway',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
-      home: const MainTabview(), // je l'ai changé selon le tuto
+      home: const StartupView(),
     );
   }
 }

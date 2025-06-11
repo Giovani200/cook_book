@@ -1,349 +1,479 @@
-import 'package:cook_book/common/color_extension.dart';
-import 'package:cook_book/common_widget/category_call.dart';
-import 'package:cook_book/common_widget/most_popular_cell.dart';
-import 'package:cook_book/common_widget/recent_item_row.dart';
-import 'package:cook_book/common_widget/round_textfield.dart';
-import 'package:cook_book/common_widget/view_all_title_row.dart';
 import 'package:flutter/material.dart';
+import '../../models/recipe_model.dart';
+import '../../services/recipe_service.dart';
+import '../../common/app_colors.dart';
+import 'category_recipes_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
-  //
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  TextEditingController txtSearch = TextEditingController();
+  List<Recipe> _recentRecipes = [];
+  List<Recipe> _popularRecipes = [];
+  bool _isLoading = true;
 
-  // Liste des plats avec différentes informations
-  final List<Map<String, dynamic>> recipes = [
+  final List<Map<String, dynamic>> _categories = [
     {
-      "name": "Spaghetti Carbonara",
-      "description":
-          "Une recette italienne classique avec œufs, fromage et lardons",
-      "image": "assets/img/burger.png", // Chemin vers l'image du plat 1
+      'name': 'Entrées',
+      'icon': Icons.restaurant,
+      'color': AppColors.primary,
+      'image': 'assets/img/entrees.png'
     },
     {
-      "name": "Poulet rôti",
-      "description": "Poulet doré au four avec herbes et légumes de saison",
-      "image": "assets/img/burger.png", // Chemin vers l'image du plat 2
+      'name': 'Plats',
+      'icon': Icons.dinner_dining,
+      'color': AppColors.secondary,
+      'image': 'assets/img/plats.png'
     },
     {
-      "name": "Salade César",
-      "description": "Laitue romaine, croûtons, parmesan et sauce crémeuse",
-      "image": "assets/img/burger.png", // Chemin vers l'image du plat 3
-    },
-    {
-      "name": "Burger maison",
-      "description": "Steak haché, cheddar fondu et sauce spéciale",
-      "image": "assets/img/burger.png", // Chemin vers l'image du plat 4
-    },
-  ];
-
-  // catégorie de plats
-
-  List catArr = [
-    {
-      "name": "Entrées",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Entrées
-    },
-    {
-      "name": "Plats principaux",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Plats principaux
-    },
-    {
-      "name": "Desserts",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Desserts
-    },
-    {
-      "name": "Boissons",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Boissons
-    },
-  ];
-
-  List mostPopArr = [
-    {
-      "name": "spaghetti",
-      "image":
-          "assets/img/spaghetti.jpg", // Chemin vers l'image de la catégorie Entrées
-      "rate": "4", // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
-    },
-    {
-      "name": "pancakes",
-      "image":
-          "assets/img/pancakes.jpg", // Chemin vers l'image de la catégorie Plats principaux
-      "rate": 4, // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
-    },
-  ];
-
-  List recentArr = [
-    {
-      "name": "Entrées",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Entrées
-      "rate": 4, // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
-    },
-    {
-      "name": "Plats principaux",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Plats principaux
-      "rate": 4, // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
-    },
-    {
-      "name": "Entrées",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Entrées
-      "rate": 4, // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
-    },
-
-    {
-      "name": "Plats principaux",
-      "image":
-          "assets/img/burger.png", // Chemin vers l'image de la catégorie Plats principaux
-      "rate": 4, // Note de popularité
-      "rating": "124",
-      "type": "entree", // Type de la catégorie
-      "food_type": "entree", // Type de la catégorie
+      'name': 'Desserts',
+      'icon': Icons.cake,
+      'color': AppColors.accent,
+      'image': 'assets/img/desserts.png'
     },
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final recentRecipes = await RecipeService.instance.getRecentRecipes(limit: 3);
+      final popularRecipes = await RecipeService.instance.getMostPopularRecipes(limit: 5);
+      
+      setState(() {
+        _recentRecipes = recentRecipes;
+        _popularRecipes = popularRecipes;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // const SizedBox(
-                    //   height: 64), // Espace à gauche
-                    Text(
-                      "Good Morning Mohamed!",
-                      style: TextStyle(
-                        color: TColor.primaryText,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+      backgroundColor: AppColors.background,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+          : RefreshIndicator(
+              onRefresh: _loadData,
+              color: AppColors.primary,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header avec salutation
+                      _buildHeader(),
+                      SizedBox(height: 30),
 
-                    IconButton(
-                      onPressed: () {},
-                      icon: Image.asset(
-                        "assets/img/profil.png",
-                        width: 20,
-                        height: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                      // Recettes récemment ajoutées
+                      if (_recentRecipes.isNotEmpty) ...[
+                        _buildSectionTitle("Recettes récemment ajoutées"),
+                        SizedBox(height: 15),
+                        _buildRecentRecipesSection(),
+                        SizedBox(height: 30),
+                      ],
 
-              const SizedBox(height: 20), // Espace entre le texte et la liste
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: RoundTextfield(
-                  hintText: "Search Food",
-                  controller: txtSearch,
-                  left: Container(
-                    alignment: Alignment.center,
-                    width: 30,
-                    child: Image.asset(
-                      "assets/img/search.png",
-                      width: 20,
-                      height: 20,
-                    ),
+                      // Section Catégories
+                      _buildSectionTitle("Catégories"),
+                      SizedBox(height: 15),
+                      _buildCategoriesSection(),
+                      SizedBox(height: 30),
+
+                      // Recettes populaires
+                      if (_popularRecipes.isNotEmpty) ...[
+                        _buildSectionTitle("Recettes populaires"),
+                        SizedBox(height: 15),
+                        _buildPopularRecipesSection(),
+                      ] else ...[
+                        _buildEmptyState(),
+                      ],
+                    ],
                   ),
                 ),
               ),
+            ),
+    );
+  }
 
-              const SizedBox(height: 15),
-
-              // Liste horizontale défilante de plats
-              SizedBox(
-                height: 150,
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: recipes.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.black87,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          // Partie gauche: description et bouton
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  recipes[index]["name"], // Nom du plat de la liste
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 1),
-                                Text(
-                                  recipes[index]["description"], // Description du plat de la liste
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const Spacer(),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  child: const Text("Voir la recette"),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Partie droite: image
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  recipes[index]["image"], // Image spécifique au plat
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Bonjour !",
+                style: TextStyle(
+                  fontFamily: 'Playfair Display',
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
                 ),
               ),
+              Text(
+                "Que cuisinons-nous aujourd'hui ?",
+                style: TextStyle(
+                  fontFamily: 'Raleway',
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: CircleAvatar(
+              radius: 25,
+              backgroundColor: AppColors.primary,
+              child: Icon(Icons.person, color: Colors.white, size: 28),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-              const SizedBox(height: 20),
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontFamily: 'Playfair Display',
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    );
+  }
 
-              // Titre pour la section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
+  Widget _buildRecentRecipesSection() {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        scrollDirection: Axis.horizontal,
+        itemCount: _recentRecipes.length,
+        itemBuilder: (context, index) {
+          final recipe = _recentRecipes[index];
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.85,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipe.name,
+                    style: TextStyle(
+                      fontFamily: 'Playfair Display',
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    recipe.description,
+                    style: TextStyle(
+                      fontFamily: 'Raleway',
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Icon(Icons.timer, color: Colors.white, size: 18),
+                      SizedBox(width: 6),
+                      Text(
+                        "${recipe.prepTime} min",
+                        style: TextStyle(
+                          fontFamily: 'Raleway',
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          recipe.category,
+                          style: TextStyle(
+                            fontFamily: 'Raleway',
+                            color: AppColors.primary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCategoriesSection() {
+    return Container(
+      height: 140,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        scrollDirection: Axis.horizontal,
+        itemCount: _categories.length,
+        itemBuilder: (context, index) {
+          final category = _categories[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CategoryRecipesView(
+                    category: category['name'],
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              width: 120,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 15,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: category['color'].withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      category['icon'],
+                      size: 30,
+                      color: category['color'],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    category['name'],
+                    style: TextStyle(
+                      fontFamily: 'Raleway',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPopularRecipesSection() {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      itemCount: _popularRecipes.length,
+      itemBuilder: (context, index) {
+        final recipe = _popularRecipes[index];
+        return Container(
+          margin: EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.shadow,
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ListTile(
+            contentPadding: EdgeInsets.all(16),
+            leading: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.secondary, AppColors.secondary.withOpacity(0.7)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.restaurant, color: Colors.white, size: 28),
+            ),
+            title: Text(
+              recipe.name,
+              style: TextStyle(
+                fontFamily: 'Playfair Display',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 4),
+                Text(
+                  recipe.category,
+                  style: TextStyle(
+                    fontFamily: 'Raleway',
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Row(
                   children: [
+                    Icon(Icons.timer, size: 14, color: AppColors.primary),
+                    SizedBox(width: 4),
                     Text(
-                      "Catégorie de plats",
+                      "${recipe.prepTime} min",
                       style: TextStyle(
-                        color: TColor.primaryText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Raleway',
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(height: 30),
-
-              SizedBox(
-                height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: catArr.length,
-                  itemBuilder: ((context, index) {
-                    var cObj = catArr[index] as Map? ?? {};
-                    return CategoryCall(cObj: cObj, onTap: () {});
-                  }),
+              ],
+            ),
+            trailing: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.favorite, color: AppColors.primary, size: 20),
+                SizedBox(height: 4),
+                Text(
+                  '${recipe.likes}',
+                  style: TextStyle(
+                    fontFamily: 'Raleway',
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-              ),
-
-              // const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ViewAllTitleRow(title: "Popular Recipes", onView: () {}),
-              ),
-
-
-
-
-              
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ViewAllTitleRow(title: "Most popular", onView: () {}),
-              ),
-
-              SizedBox(
-                height: 160,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  itemCount: mostPopArr.length,
-                  itemBuilder: ((context, index) {
-                    var mObj = mostPopArr[index] as Map? ?? {};
-                    return MostPopularCell(mObj: mObj, onTap: () {});
-                  }),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ViewAllTitleRow(title: "Recent Items", onView: () {}),
-              ),
-
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                itemCount: recentArr.length,
-                itemBuilder: ((context, index) {
-                  var rObj = recentArr[index] as Map? ?? {};
-                  return RecentItemRow(rObj: rObj, onTap: () {});
-                }),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.restaurant_menu,
+            size: 80,
+            color: AppColors.textSecondary.withOpacity(0.5),
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Aucune recette disponible",
+            style: TextStyle(
+              fontFamily: 'Playfair Display',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            "Commencez par ajouter votre première recette !",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Raleway',
+              fontSize: 16,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }

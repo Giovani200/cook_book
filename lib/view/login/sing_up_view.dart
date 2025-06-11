@@ -1,9 +1,10 @@
 import 'package:cook_book/common_widget/round_button.dart';
 import 'package:cook_book/view/login/login_view.dart';
-import 'package:cook_book/view/login/otp_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/common/color_extension.dart';
 import 'package:cook_book/common_widget/round_textfield.dart';
+// import 'package:cook_book/services/mongodb_service.dart';
+import 'package:cook_book/models/user_model.dart';
 
 class SingUpView extends StatefulWidget {
   const SingUpView({super.key});
@@ -18,6 +19,110 @@ class _SingUpViewState extends State<SingUpView> {
   TextEditingController txtMobile = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
   TextEditingController txtConfirmPassword = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> _registerUser() async {
+    // Validation des champs
+    if (txtName.text.isEmpty ||
+        txtEmail.text.isEmpty ||
+        txtMobile.text.isEmpty ||
+        txtPassword.text.isEmpty) {
+      _showErrorDialog('Veuillez remplir tous les champs');
+      return;
+    }
+
+    if (txtPassword.text != txtConfirmPassword.text) {
+      _showErrorDialog('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (txtPassword.text.length < 6) {
+      _showErrorDialog('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Simuler un délai d'inscription
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Créer l'utilisateur (stockage temporaire en mémoire)
+      User newUser = User(
+        name: txtName.text.trim(),
+        email: txtEmail.text.trim().toLowerCase(),
+        mobile: txtMobile.text.trim(),
+        password: txtPassword.text,
+        createdAt: DateTime.now(),
+      );
+
+      // Pour l'instant, on simule juste le succès
+      print('Utilisateur créé: ${newUser.name} - ${newUser.email}');
+
+      setState(() {
+        isLoading = false;
+      });
+
+      // Afficher message de succès
+      _showSuccessDialog();
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      _showErrorDialog('Erreur lors de l\'inscription: ${e.toString()}');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Erreur'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Succès'),
+          content: Text('Compte créé avec succès ! Vous pouvez maintenant vous connecter.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginView()),
+                );
+              },
+              child: Text('Se connecter'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleRegister() {
+    if (!isLoading) {
+      _registerUser();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -78,13 +183,8 @@ class _SingUpViewState extends State<SingUpView> {
               const SizedBox(height: 25),
 
               RoundButton(
-                title: "S'inscrire",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OTPView()),
-                  );
-                },
+                title: isLoading ? "Inscription en cours..." : "S'inscrire",
+                onPressed: _handleRegister,
               ),
               const SizedBox(height: 3),
 

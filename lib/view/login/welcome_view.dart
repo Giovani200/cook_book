@@ -22,7 +22,7 @@ class _WelcomeViewState extends State<WelcomeView> {
         children: [
           // Image de fond
           Image.asset(
-            "assets/img/un-personnage-3d-emergeant-d-un-smartphone.jpg",
+            "assets/img/welcome_bg.jpg", // Nom plus simple
             width: media.width,
             height: media.height * 0.55,
             fit: BoxFit.cover,
