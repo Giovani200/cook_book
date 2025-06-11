@@ -1,8 +1,6 @@
 import 'package:cook_book/view/on_boarding/startup_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/common/app_colors.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:cook_book/common/supabase_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
