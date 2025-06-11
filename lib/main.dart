@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Cook Book',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: "Raleway",
+        fontFamily: "Roboto", // Utilisation d'une police système
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primary,
           primary: AppColors.primary,
@@ -25,21 +25,21 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: TextTheme(
           headlineLarge: TextStyle(
-            fontFamily: 'Playfair Display',
+            // fontFamily: 'Playfair Display', // Commenté pour éviter l'erreur
             color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
           headlineMedium: TextStyle(
-            fontFamily: 'Playfair Display',
+            // fontFamily: 'Playfair Display', // Commenté pour éviter l'erreur
             color: AppColors.textPrimary,
             fontWeight: FontWeight.bold,
           ),
           bodyLarge: TextStyle(
-            fontFamily: 'Raleway',
+            // fontFamily: 'Raleway', // Commenté pour éviter l'erreur
             color: AppColors.textPrimary,
           ),
           bodyMedium: TextStyle(
-            fontFamily: 'Raleway',
+            // fontFamily: 'Raleway', // Commenté pour éviter l'erreur
             color: AppColors.textSecondary,
           ),
         ),
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           titleTextStyle: TextStyle(
-            fontFamily: 'Playfair Display',
+            // fontFamily: 'Playfair Display', // Commenté pour éviter l'erreur
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             textStyle: TextStyle(
-              fontFamily: 'Raleway',
+              // fontFamily: 'Raleway', // Commenté pour éviter l'erreur
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -68,5 +68,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
