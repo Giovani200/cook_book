@@ -35,7 +35,7 @@ class _MainTabviewState extends State<MainTabview> {
           },
           shape: const CircleBorder(),
           backgroundColor: selectTab == 2 ? TColor.primary : TColor.placeholder,
-          child: Image.asset("assets/img/tab_home.png", width: 35, height: 35),
+          child: Image.asset("assets/img/tab_home.webp", width: 35, height: 35),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -49,7 +49,7 @@ class _MainTabviewState extends State<MainTabview> {
           children: [
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_menu.png", // Changé de .webp à .png
+                "assets/img/tab_menu.webp", // Changé de .webp à .webp
                 width: 30,
                 height: 30,
               ),
@@ -65,7 +65,7 @@ class _MainTabviewState extends State<MainTabview> {
             ),
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_add.png", // Nouveau nom pour l'icône d'ajout
+                "assets/img/tab_add.webp", // Nouveau nom pour l'icône d'ajout
                 width: 30,
                 height: 30,
                 color: selectTab == 1 ? TColor.primary : TColor.placeholder,
@@ -81,7 +81,7 @@ class _MainTabviewState extends State<MainTabview> {
             const SizedBox(width: 65), // Espace pour le FAB
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_profile.png", // Nouveau nom pour le profil
+                "assets/img/tab_profile.webp", // Nouveau nom pour le profil
                 width: 30,
                 height: 30,
                 color: selectTab == 3 ? TColor.primary : TColor.placeholder,
@@ -96,7 +96,7 @@ class _MainTabviewState extends State<MainTabview> {
             ),
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_settings.png", // Nouveau nom pour les paramètres
+                "assets/img/tab_settings.webp", // Nouveau nom pour les paramètres
                 width: 30,
                 height: 30,
                 color: selectTab == 4 ? TColor.primary : TColor.placeholder,

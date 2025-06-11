@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/recipe_model.dart';
 import '../../services/recipe_service.dart';
 import '../../common/app_colors.dart';
+import '../../services/user_session.dart';
 import 'category_recipes_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -15,25 +16,26 @@ class _HomeViewState extends State<HomeView> {
   List<Recipe> _recentRecipes = [];
   List<Recipe> _popularRecipes = [];
   bool _isLoading = true;
+  String _userName = ""; // Nom de l'utilisateur connecté
 
   final List<Map<String, dynamic>> _categories = [
     {
       'name': 'Entrées',
       'icon': Icons.restaurant,
       'color': AppColors.primary,
-      'image': 'assets/img/entrees.png'
+      'image': 'assets/img/entrees.png',
     },
     {
       'name': 'Plats',
       'icon': Icons.dinner_dining,
       'color': AppColors.secondary,
-      'image': 'assets/img/plats.png'
+      'image': 'assets/img/plats.png',
     },
     {
       'name': 'Desserts',
       'icon': Icons.cake,
       'color': AppColors.accent,
-      'image': 'assets/img/desserts.png'
+      'image': 'assets/img/desserts.png',
     },
   ];
 
@@ -41,13 +43,27 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     _loadData();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = await UserSession.instance.getCurrentUser();
+    if (user != null && mounted) {
+      setState(() {
+        _userName = user.name;
+      });
+    }
   }
 
   Future<void> _loadData() async {
     try {
-      final recentRecipes = await RecipeService.instance.getRecentRecipes(limit: 3);
-      final popularRecipes = await RecipeService.instance.getMostPopularRecipes(limit: 5);
-      
+      final recentRecipes = await RecipeService.instance.getRecentRecipes(
+        limit: 3,
+      );
+      final popularRecipes = await RecipeService.instance.getMostPopularRecipes(
+        limit: 5,
+      );
+
       setState(() {
         _recentRecipes = recentRecipes;
         _popularRecipes = popularRecipes;
@@ -64,49 +80,52 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppColors.primary))
-          : RefreshIndicator(
-              onRefresh: _loadData,
-              color: AppColors.primary,
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header avec salutation
-                      _buildHeader(),
-                      SizedBox(height: 30),
-
-                      // Recettes récemment ajoutées
-                      if (_recentRecipes.isNotEmpty) ...[
-                        _buildSectionTitle("Recettes récemment ajoutées"),
-                        SizedBox(height: 15),
-                        _buildRecentRecipesSection(),
+      body:
+          _isLoading
+              ? Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              )
+              : RefreshIndicator(
+                onRefresh: _loadData,
+                color: AppColors.primary,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header avec salutation
+                        _buildHeader(),
                         SizedBox(height: 30),
-                      ],
 
-                      // Section Catégories
-                      _buildSectionTitle("Catégories"),
-                      SizedBox(height: 15),
-                      _buildCategoriesSection(),
-                      SizedBox(height: 30),
+                        // Recettes récemment ajoutées
+                        if (_recentRecipes.isNotEmpty) ...[
+                          _buildSectionTitle("Recettes récemment ajoutées"),
+                          SizedBox(height: 15),
+                          _buildRecentRecipesSection(),
+                          SizedBox(height: 30),
+                        ],
 
-                      // Recettes populaires
-                      if (_popularRecipes.isNotEmpty) ...[
-                        _buildSectionTitle("Recettes populaires"),
+                        // Section Catégories
+                        _buildSectionTitle("Catégories"),
                         SizedBox(height: 15),
-                        _buildPopularRecipesSection(),
-                      ] else ...[
-                        _buildEmptyState(),
+                        _buildCategoriesSection(),
+                        SizedBox(height: 30),
+
+                        // Recettes populaires
+                        if (_popularRecipes.isNotEmpty) ...[
+                          _buildSectionTitle("Recettes populaires"),
+                          SizedBox(height: 15),
+                          _buildPopularRecipesSection(),
+                        ] else ...[
+                          _buildEmptyState(),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
     );
   }
 
@@ -120,7 +139,7 @@ class _HomeViewState extends State<HomeView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Bonjour !",
+                "Bonjour${_userName.isNotEmpty ? ' $_userName' : ''}!",
                 style: TextStyle(
                   fontFamily: 'Playfair Display',
                   fontSize: 28,
@@ -152,7 +171,17 @@ class _HomeViewState extends State<HomeView> {
             child: CircleAvatar(
               radius: 25,
               backgroundColor: AppColors.primary,
-              child: Icon(Icons.person, color: Colors.white, size: 28),
+              child:
+                  _userName.isNotEmpty
+                      ? Text(
+                        _userName[0].toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                      : Icon(Icons.person, color: Colors.white, size: 28),
             ),
           ),
         ],
@@ -243,7 +272,10 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       Spacer(),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -283,9 +315,9 @@ class _HomeViewState extends State<HomeView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CategoryRecipesView(
-                    category: category['name'],
-                  ),
+                  builder:
+                      (context) =>
+                          CategoryRecipesView(category: category['name']),
                 ),
               );
             },
@@ -366,7 +398,10 @@ class _HomeViewState extends State<HomeView> {
               height: 60,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.secondary, AppColors.secondary.withOpacity(0.7)],
+                  colors: [
+                    AppColors.secondary,
+                    AppColors.secondary.withOpacity(0.7),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),

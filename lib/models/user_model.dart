@@ -1,38 +1,78 @@
+// Modèle de données représentant un utilisateur dans l'application
+import 'package:mongo_dart/mongo_dart.dart';
+
 class User {
-  final String? id;
+  // Identifiant MongoDB unique
+  final ObjectId? id;
+  // Nom complet de l'utilisateur
   final String name;
+  // Email (utilisé pour l'authentification)
   final String email;
-  final String mobile;
+  // Mot de passe (devrait idéalement être hashé)
   final String password;
+  // Numéro de téléphone optionnel
+  final String? mobile;
+  // Date de création du compte
   final DateTime createdAt;
 
+  // Constructeur principal
   User({
     this.id,
     required this.name,
     required this.email,
-    required this.mobile,
     required this.password,
+    this.mobile,
     required this.createdAt,
   });
 
+  // Création d'un objet User à partir d'un JSON (pour la désérialisation)
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id:
+          json['_id'] is ObjectId
+              ? json['_id']
+              : json['_id'] != null
+              ? ObjectId.parse(json['_id'].toString())
+              : null,
+      name: json['name'],
+      email: json['email'],
+      password: json['password'],
+      mobile: json['mobile'],
+      createdAt:
+          json['createdAt'] is DateTime
+              ? json['createdAt']
+              : DateTime.parse(json['createdAt']),
+    );
+  }
+
+  // Conversion de l'objet User en JSON (pour la sérialisation)
   Map<String, dynamic> toJson() {
     return {
+      if (id != null) '_id': id,
       'name': name,
       'email': email,
-      'mobile': mobile,
       'password': password,
+      'mobile': mobile,
       'createdAt': createdAt.toIso8601String(),
     };
   }
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  // Méthode utilitaire pour créer une copie modifiée de l'utilisateur
+  User copyWith({
+    ObjectId? id,
+    String? name,
+    String? email,
+    String? password,
+    String? mobile,
+    DateTime? createdAt,
+  }) {
     return User(
-      id: json['_id']?.toString(),
-      name: json['name'],
-      email: json['email'],
-      mobile: json['mobile'],
-      password: json['password'],
-      createdAt: DateTime.parse(json['createdAt']),
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      mobile: mobile ?? this.mobile,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

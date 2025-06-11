@@ -16,17 +16,17 @@ class _MenuViewState extends State<MenuView> {
   final List<Map<String, dynamic>> menuCategories = [
     {
       "name": "Entrées",
-      "image": "assets/img/entrees.png", // Changé en .png
+      "image": "assets/img/entrees.webp", // Changé en .webp
       "items": "56 items",
     },
     {
-      "name": "Plats", 
-      "image": "assets/img/plats.png", // Changé en .png
+      "name": "Plats",
+      "image": "assets/img/plat.webp", // Changé en .webp
       "items": "45 items"
     },
     {
       "name": "Desserts",
-      "image": "assets/img/desserts.png", // Changé en .png
+      "image": "assets/img/dessert.webp", // Changé en .webp
       "items": "34 items",
     },
   ];
