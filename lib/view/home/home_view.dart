@@ -4,6 +4,7 @@ import '../../services/recipe_service.dart';
 import '../../common/app_colors.dart';
 import '../../services/user_session.dart';
 import 'category_recipes_view.dart';
+import 'recipe_detail_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -13,8 +14,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<Recipe> _recentRecipes = [];
-  List<Recipe> _popularRecipes = [];
+  List<Map<String, dynamic>> _recentRecipes =
+      []; // CHANGEMENT: Map au lieu de Recipe
+  List<Map<String, dynamic>> _popularRecipes =
+      []; // CHANGEMENT: Map au lieu de Recipe
   bool _isLoading = true;
   String _userName = ""; // Nom de l'utilisateur connecté
 
@@ -57,16 +60,34 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> _loadData() async {
     try {
-      final recentRecipes = await RecipeService.instance.getRecentRecipes(
-        limit: 3,
-      );
-      final popularRecipes = await RecipeService.instance.getMostPopularRecipes(
-        limit: 5,
-      );
+      final recentRecipes = await RecipeService.instance.getAllRecipes();
+      final popularRecipes = await RecipeService.instance.getAllRecipes();
+
+      // Conversion en Map avec auteurs
+      List<Map<String, dynamic>> recentWithAuthors = [];
+      List<Map<String, dynamic>> popularWithAuthors = [];
+
+      // Récupérer les 3 plus récentes
+      final sortedRecent = List<Recipe>.from(recentRecipes);
+      sortedRecent.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      for (int i = 0; i < 3 && i < sortedRecent.length; i++) {
+        final recipeWithAuthor = await RecipeService.instance
+            .getRecipeWithAuthor(sortedRecent[i]);
+        recentWithAuthors.add(recipeWithAuthor);
+      }
+
+      // Récupérer les 5 plus populaires
+      final sortedPopular = List<Recipe>.from(popularRecipes);
+      sortedPopular.sort((a, b) => b.likes.compareTo(a.likes));
+      for (int i = 0; i < 5 && i < sortedPopular.length; i++) {
+        final recipeWithAuthor = await RecipeService.instance
+            .getRecipeWithAuthor(sortedPopular[i]);
+        popularWithAuthors.add(recipeWithAuthor);
+      }
 
       setState(() {
-        _recentRecipes = recentRecipes;
-        _popularRecipes = popularRecipes;
+        _recentRecipes = recentWithAuthors;
+        _popularRecipes = popularWithAuthors;
         _isLoading = false;
       });
     } catch (e) {
@@ -206,93 +227,138 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildRecentRecipesSection() {
     return SizedBox(
-      height: 200,
+      height: 220, // Augmenté pour inclure l'auteur
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         scrollDirection: Axis.horizontal,
         itemCount: _recentRecipes.length,
         itemBuilder: (context, index) {
-          final recipe = _recentRecipes[index];
-          return Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            margin: const EdgeInsets.symmetric(horizontal: 5),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: Offset(0, 8),
+          final recipeData = _recentRecipes[index];
+          final Recipe recipe = recipeData['recipe'];
+          final String authorName = recipeData['authorName'];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecipeDetailView(recipe: recipe),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    recipe.name,
-                    style: TextStyle(
-                      fontFamily: 'Playfair Display',
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    recipe.description,
-                    style: TextStyle(
-                      fontFamily: 'Raleway',
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Icon(Icons.timer, color: Colors.white, size: 18),
-                      SizedBox(width: 6),
-                      Text(
-                        "${recipe.prepTime} min",
-                        style: TextStyle(
-                          fontFamily: 'Raleway',
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacer(),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          recipe.category,
-                          style: TextStyle(
-                            fontFamily: 'Raleway',
-                            color: AppColors.primary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.85,
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.primary.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.3),
+                    blurRadius: 15,
+                    offset: Offset(0, 8),
                   ),
                 ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            recipe.name,
+                            style: TextStyle(
+                              fontFamily: 'Playfair Display',
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.white.withOpacity(0.3),
+                          child: Text(
+                            authorName.isNotEmpty
+                                ? authorName[0].toUpperCase()
+                                : 'U',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Par $authorName',
+                      style: TextStyle(
+                        fontFamily: 'Raleway',
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      recipe.description,
+                      style: TextStyle(
+                        fontFamily: 'Raleway',
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Icon(Icons.timer, color: Colors.white, size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          "${recipe.prepTime} min",
+                          style: TextStyle(
+                            fontFamily: 'Raleway',
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            recipe.category,
+                            style: TextStyle(
+                              fontFamily: 'Raleway',
+                              color: AppColors.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -377,88 +443,110 @@ class _HomeViewState extends State<HomeView> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       itemCount: _popularRecipes.length,
       itemBuilder: (context, index) {
-        final recipe = _popularRecipes[index];
-        return Container(
-          margin: EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.shadow,
-                blurRadius: 10,
-                offset: Offset(0, 4),
+        final recipeData = _popularRecipes[index];
+        final Recipe recipe = recipeData['recipe'];
+        final String authorName = recipeData['authorName'];
+
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecipeDetailView(recipe: recipe),
               ),
-            ],
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.all(16),
-            leading: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.secondary,
-                    AppColors.secondary.withOpacity(0.7),
-                  ],
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
                 ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.restaurant, color: Colors.white, size: 28),
+              ],
             ),
-            title: Text(
-              recipe.name,
-              style: TextStyle(
-                fontFamily: 'Playfair Display',
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 4),
-                Text(
-                  recipe.category,
-                  style: TextStyle(
-                    fontFamily: 'Raleway',
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
+            child: ListTile(
+              contentPadding: EdgeInsets.all(16),
+              leading: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.secondary,
+                      AppColors.secondary.withOpacity(0.7),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.timer, size: 14, color: AppColors.primary),
-                    SizedBox(width: 4),
-                    Text(
-                      "${recipe.prepTime} min",
-                      style: TextStyle(
-                        fontFamily: 'Raleway',
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
-                      ),
+                child: Icon(Icons.restaurant, color: Colors.white, size: 28),
+              ),
+              title: Text(
+                recipe.name,
+                style: TextStyle(
+                  fontFamily: 'Playfair Display',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 4),
+                  Text(
+                    'Par $authorName',
+                    style: TextStyle(
+                      fontFamily: 'Raleway',
+                      color: AppColors.secondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
-              ],
-            ),
-            trailing: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.favorite, color: AppColors.primary, size: 20),
-                SizedBox(height: 4),
-                Text(
-                  '${recipe.likes}',
-                  style: TextStyle(
-                    fontFamily: 'Raleway',
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondary,
                   ),
-                ),
-              ],
+                  Text(
+                    recipe.category,
+                    style: TextStyle(
+                      fontFamily: 'Raleway',
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.timer, size: 14, color: AppColors.primary),
+                      SizedBox(width: 4),
+                      Text(
+                        "${recipe.prepTime} min",
+                        style: TextStyle(
+                          fontFamily: 'Raleway',
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.favorite, color: AppColors.primary, size: 20),
+                  SizedBox(height: 4),
+                  Text(
+                    '${recipe.likes}',
+                    style: TextStyle(
+                      fontFamily: 'Raleway',
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

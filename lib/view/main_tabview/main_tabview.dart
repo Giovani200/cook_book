@@ -3,6 +3,8 @@ import 'package:cook_book/view/home/home_view.dart';
 import 'package:cook_book/view/home/menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/view/home/add_recipe_view.dart';
+import 'package:cook_book/view/home/profil_view.dart';
+import 'package:cook_book/view/home/settings_view.dart';
 
 class MainTabview extends StatefulWidget {
   const MainTabview({super.key});
@@ -14,7 +16,8 @@ class MainTabview extends StatefulWidget {
 class _MainTabviewState extends State<MainTabview> {
   int selectTab = 2;
   PageStorageBucket storageBucket = PageStorageBucket();
-  Widget selectPageView = const HomeView(); // Changez ici pour afficher HomeView par défaut
+  Widget selectPageView =
+      const HomeView(); // Changez ici pour afficher HomeView par défaut
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,14 +84,15 @@ class _MainTabviewState extends State<MainTabview> {
             const SizedBox(width: 65), // Espace pour le FAB
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_profile.webp", // Nouveau nom pour le profil
+                "assets/img/tab_profile.webp",
                 width: 30,
                 height: 30,
                 color: selectTab == 3 ? TColor.primary : TColor.placeholder,
               ),
               onPressed: () {
                 selectTab = 3;
-                selectPageView = const Center(child: Text("Profile"));
+                selectPageView =
+                    const ProfilView(); // CHANGEMENT: Utiliser ProfilView
                 if (mounted) {
                   setState(() {});
                 }
@@ -96,14 +100,15 @@ class _MainTabviewState extends State<MainTabview> {
             ),
             IconButton(
               icon: Image.asset(
-                "assets/img/tab_settings.webp", // Nouveau nom pour les paramètres
+                "assets/img/tab_settings.webp",
                 width: 30,
                 height: 30,
                 color: selectTab == 4 ? TColor.primary : TColor.placeholder,
               ),
               onPressed: () {
                 selectTab = 4;
-                selectPageView = const Center(child: Text("Settings"));
+                selectPageView =
+                    const SettingsView(); // CHANGEMENT: Utiliser SettingsView
                 if (mounted) {
                   setState(() {});
                 }

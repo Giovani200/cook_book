@@ -46,10 +46,13 @@ class _SingUpViewState extends State<SingUpView> {
     });
 
     try {
-      // Vérifier si l'utilisateur existe déjà
+      print("Tentative d'inscription avec MongoDB: ${txtEmail.text}");
+
+      // Vérifier si l'utilisateur existe déjà dans MongoDB
       final existingUser = await MongoDBService.instance.findUserByEmail(
-        txtEmail.text.trim(),
+        txtEmail.text.trim().toLowerCase(),
       );
+
       if (existingUser != null) {
         setState(() {
           isLoading = false;
@@ -58,14 +61,16 @@ class _SingUpViewState extends State<SingUpView> {
         return;
       }
 
-      // Créer l'utilisateur
+      // Créer l'utilisateur pour MongoDB
       User newUser = User(
+        id: null,
         name: txtName.text.trim(),
         email: txtEmail.text.trim().toLowerCase(),
         password: txtPassword.text,
         createdAt: DateTime.now(),
       );
 
+      // Enregistrer dans MongoDB
       final success = await MongoDBService.instance.createUser(newUser);
 
       setState(() {
@@ -73,18 +78,27 @@ class _SingUpViewState extends State<SingUpView> {
       });
 
       if (success) {
-        // Sauvegarder la session utilisateur
-        await UserSession.instance.saveUserSession(newUser);
-
-        // Rediriger vers l'accueil
+        // SUPPRESSION de la vérification qui pose problème
+        // L'inscription a réussi, rediriger directement vers login
         if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Inscription réussie! Vous pouvez maintenant vous connecter.',
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 3),
+            ),
+          );
+
+          // Rediriger vers la page de connexion
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MainTabview()),
+            MaterialPageRoute(builder: (context) => const LoginView()),
           );
         }
       } else {
-        _showErrorDialog('Erreur lors de l\'inscription');
+        _showErrorDialog('Erreur lors de l\'enregistrement en base de données');
       }
     } catch (e) {
       setState(() {

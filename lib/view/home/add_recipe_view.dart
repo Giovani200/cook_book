@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mongo_dart/mongo_dart.dart'
+    as mongo; // CORRECTION: Ajout du préfixe
 import '../../models/recipe_model.dart';
 import '../../services/recipe_service.dart';
+import '../../services/user_session.dart';
 import '../../common/app_colors.dart';
 
 class AddRecipeView extends StatefulWidget {
@@ -19,7 +22,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
   final TextEditingController _preparationController = TextEditingController();
   final TextEditingController _prepTimeController = TextEditingController();
   final TextEditingController _cookingTimeController = TextEditingController();
-  
+
   String _selectedCategory = "Entrées";
   final List<String> _categories = ["Entrées", "Plats", "Desserts"];
   File? _image;
@@ -27,7 +30,9 @@ class _AddRecipeViewState extends State<AddRecipeView> {
   bool _isLoading = false;
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -43,8 +48,21 @@ class _AddRecipeViewState extends State<AddRecipeView> {
     });
 
     try {
+      final currentUser = await UserSession.instance.getCurrentUser();
+      if (currentUser == null) {
+        throw Exception('Utilisateur non connecté');
+      }
+
+      mongo.ObjectId? userObjectId;
+      if (currentUser.id != null) {
+        userObjectId = currentUser.id;
+      } else {
+        print('⚠️ Utilisateur sans ObjectId, création d\'un ID temporaire');
+        userObjectId = mongo.ObjectId();
+      }
+
       final recipe = Recipe(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: null,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         preparation: _preparationController.text.trim(),
@@ -53,6 +71,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
         category: _selectedCategory,
         imagePath: _image?.path,
         createdAt: DateTime.now(),
+        authorId: userObjectId,
       );
 
       await RecipeService.instance.saveRecipe(recipe);
@@ -64,7 +83,9 @@ class _AddRecipeViewState extends State<AddRecipeView> {
             backgroundColor: AppColors.secondary,
           ),
         );
-        Navigator.pop(context);
+
+        // CORRECTION: Retourner un résultat pour indiquer le succès
+        Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
@@ -106,21 +127,27 @@ class _AddRecipeViewState extends State<AddRecipeView> {
               _buildTextField(
                 controller: _nameController,
                 hintText: "Nom de la recette",
-                validator: (value) => value?.isEmpty == true ? 'Ce champ est requis' : null,
+                validator:
+                    (value) =>
+                        value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
               SizedBox(height: 16),
               _buildTextField(
                 controller: _descriptionController,
                 hintText: "Description",
                 maxLines: 3,
-                validator: (value) => value?.isEmpty == true ? 'Ce champ est requis' : null,
+                validator:
+                    (value) =>
+                        value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
               SizedBox(height: 16),
               _buildTextField(
                 controller: _preparationController,
                 hintText: "Mode de préparation et ingrédients",
                 maxLines: 5,
-                validator: (value) => value?.isEmpty == true ? 'Ce champ est requis' : null,
+                validator:
+                    (value) =>
+                        value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
               SizedBox(height: 16),
               Row(
@@ -154,30 +181,39 @@ class _AddRecipeViewState extends State<AddRecipeView> {
               ),
               SizedBox(height: 10),
               Row(
-                children: _categories.map((category) {
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedCategory = category),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: _selectedCategory == category ? AppColors.primary : Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.primary),
-                        ),
-                        child: Text(
-                          category,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Raleway',
-                            color: _selectedCategory == category ? Colors.white : AppColors.textPrimary,
+                children:
+                    _categories.map((category) {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap:
+                              () =>
+                                  setState(() => _selectedCategory = category),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color:
+                                  _selectedCategory == category
+                                      ? AppColors.primary
+                                      : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: AppColors.primary),
+                            ),
+                            child: Text(
+                              category,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Raleway',
+                                color:
+                                    _selectedCategory == category
+                                        ? Colors.white
+                                        : AppColors.textPrimary,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                }).toList(),
+                      );
+                    }).toList(),
               ),
               SizedBox(height: 20),
               GestureDetector(
@@ -188,14 +224,22 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.textSecondary.withOpacity(0.3)),
+                    border: Border.all(
+                      color: AppColors.textSecondary.withOpacity(0.3),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.camera_alt, color: AppColors.textSecondary, size: 30),
+                      Icon(
+                        Icons.camera_alt,
+                        color: AppColors.textSecondary,
+                        size: 30,
+                      ),
                       SizedBox(height: 8),
                       Text(
-                        _image != null ? "Image sélectionnée" : "Ajouter une image (optionnel)",
+                        _image != null
+                            ? "Image sélectionnée"
+                            : "Ajouter une image (optionnel)",
                         style: TextStyle(
                           fontFamily: 'Raleway',
                           color: AppColors.textSecondary,
@@ -213,19 +257,22 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   onPressed: _isLoading ? null : _saveRecipe,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          "Enregistrer",
-                          style: TextStyle(
-                            fontFamily: 'Raleway',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  child:
+                      _isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                            "Enregistrer",
+                            style: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
                 ),
               ),
             ],

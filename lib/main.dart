@@ -1,9 +1,24 @@
 import 'package:cook_book/view/on_boarding/startup_view.dart';
+import 'package:cook_book/view/login/welcome_view.dart';
+import 'package:cook_book/view/main_tabview/main_tabview.dart';
+import 'package:cook_book/services/user_session.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/common/app_colors.dart';
+import 'package:cook_book/services/mongodb_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialiser MongoDB au démarrage
+  try {
+    print('🚀 DÉMARRAGE DE L\'APPLICATION');
+    await MongoDBService.instance.connect();
+    final isConnected = await MongoDBService.instance.testConnection();
+    print('MongoDB status: ${isConnected ? "✅ CONNECTÉ" : "❌ ÉCHEC"}');
+  } catch (e) {
+    print('❌ Erreur MongoDB: $e');
+  }
+
   runApp(const MyApp());
 }
 
@@ -64,7 +79,21 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const StartupView(),
+      // Gestion intelligente de la page d'accueil selon la session utilisateur
+      home: FutureBuilder<bool>(
+        future: UserSession.instance.isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const StartupView();
+          }
+
+          if (snapshot.data == true) {
+            return const MainTabview();
+          } else {
+            return const WelcomeView();
+          }
+        },
+      ),
     );
   }
 }

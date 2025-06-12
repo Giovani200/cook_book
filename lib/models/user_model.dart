@@ -48,12 +48,24 @@ class User {
   // Conversion de l'objet User en JSON (pour la sérialisation)
   Map<String, dynamic> toJson() {
     return {
-      if (id != null) '_id': id,
+      // Suppression conditionnelle de l'ID pour éviter les problèmes de typage
+      // L'ID sera généré automatiquement par MongoDB lors de l'insertion
       'name': name,
       'email': email,
       'password': password,
       'mobile': mobile,
       'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
+  // Conversion de l'objet User en Map (pour d'autres utilisations)
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'password': password,
+      'createdAt': createdAt.toIso8601String(),
+      // Ajouter d'autres champs selon la structure de votre classe User
     };
   }
 
