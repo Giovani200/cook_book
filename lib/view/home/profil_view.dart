@@ -109,7 +109,7 @@ class _ProfilViewState extends State<ProfilView> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: Colors.grey[100],
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(color: AppColors.primary),
         ),
       );
@@ -122,8 +122,8 @@ class _ProfilViewState extends State<ProfilView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
+              const Icon(Icons.error, size: 64, color: Colors.grey),
+              const SizedBox(height: 16),
               Text(
                 'Erreur de chargement du profil',
                 style: TextStyle(fontSize: 18, color: Colors.grey[600]),
@@ -144,14 +144,14 @@ class _ProfilViewState extends State<ProfilView> {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
               ),
               child: SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
                       // Bouton retour et déconnexion
@@ -160,28 +160,28 @@ class _ProfilViewState extends State<ProfilView> {
                           GestureDetector(
                             onTap: () => Navigator.pop(context),
                             child: Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.3),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.arrow_back,
                                 color: Colors.black54,
                                 size: 24,
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                             onTap: _logout,
                             child: Container(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: Colors.red.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.logout,
                                 color: Colors.red,
                                 size: 24,
@@ -191,13 +191,13 @@ class _ProfilViewState extends State<ProfilView> {
                         ],
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Photo de profil
                       Container(
                         width: 120,
                         height: 120,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.black,
                           shape: BoxShape.circle,
                         ),
@@ -206,7 +206,7 @@ class _ProfilViewState extends State<ProfilView> {
                             _currentUser!.name.isNotEmpty
                                 ? _currentUser!.name[0].toUpperCase()
                                 : 'U',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
@@ -215,11 +215,11 @@ class _ProfilViewState extends State<ProfilView> {
                         ),
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Nom utilisateur
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
@@ -229,7 +229,7 @@ class _ProfilViewState extends State<ProfilView> {
                         ),
                         child: Text(
                           _currentUser!.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.black87,
@@ -238,12 +238,12 @@ class _ProfilViewState extends State<ProfilView> {
                         ),
                       ),
 
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
                       // Email
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
@@ -256,7 +256,7 @@ class _ProfilViewState extends State<ProfilView> {
                             Expanded(
                               child: Text(
                                 _currentUser!.email,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
                                 ),
@@ -281,7 +281,7 @@ class _ProfilViewState extends State<ProfilView> {
                                 }
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 6,
                                 ),
@@ -289,7 +289,7 @@ class _ProfilViewState extends State<ProfilView> {
                                   color: AppColors.primary,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   'Modifier ✏️',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -308,18 +308,18 @@ class _ProfilViewState extends State<ProfilView> {
               ),
             ),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Section "Récemment ajouté"
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Récemment ajouté',
                         style: TextStyle(
                           fontSize: 20,
@@ -342,7 +342,7 @@ class _ProfilViewState extends State<ProfilView> {
                               );
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 8,
                               ),
@@ -353,11 +353,11 @@ class _ProfilViewState extends State<ProfilView> {
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
                                     blurRadius: 4,
-                                    offset: Offset(0, 2),
+                                    offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              child: Text(
+                              child: const Text(
                                 'View all',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -366,10 +366,10 @@ class _ProfilViewState extends State<ProfilView> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           GestureDetector(
                             onTap: () async {
-                              // CORRECTION: Attendre le résultat de l'ajout
+                              // Navigation vers l'ajout de recette (pas l'importation)
                               final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -377,11 +377,11 @@ class _ProfilViewState extends State<ProfilView> {
                                 ),
                               );
                               if (result == true) {
-                                _loadUserData(); // Recharger seulement si une recette a été ajoutée
+                                _loadUserData();
                               }
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 8,
                               ),
@@ -389,8 +389,8 @@ class _ProfilViewState extends State<ProfilView> {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Text(
-                                'Ajouter ✏️',
+                              child: const Text(
+                                'Ajouter ✏️', // Titre modifié pour éviter la confusion avec l'importation
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.white,
@@ -404,13 +404,13 @@ class _ProfilViewState extends State<ProfilView> {
                     ],
                   ),
 
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Liste des recettes récentes
                   if (_userRecipes.isEmpty)
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(40),
+                      padding: const EdgeInsets.all(40),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
@@ -418,7 +418,7 @@ class _ProfilViewState extends State<ProfilView> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
                             blurRadius: 10,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -429,7 +429,7 @@ class _ProfilViewState extends State<ProfilView> {
                             size: 48,
                             color: Colors.grey[400],
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             'Aucune recette ajoutée',
                             style: TextStyle(
@@ -437,7 +437,7 @@ class _ProfilViewState extends State<ProfilView> {
                               color: Colors.grey[600],
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Commencez par ajouter votre première recette !',
                             style: TextStyle(
@@ -460,7 +460,7 @@ class _ProfilViewState extends State<ProfilView> {
               ),
             ),
 
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -469,7 +469,7 @@ class _ProfilViewState extends State<ProfilView> {
 
   Widget _buildRecipeCard(Recipe recipe) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -477,12 +477,12 @@ class _ProfilViewState extends State<ProfilView> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(16),
+        contentPadding: const EdgeInsets.all(16),
         leading: Container(
           width: 60,
           height: 60,
@@ -490,11 +490,15 @@ class _ProfilViewState extends State<ProfilView> {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(Icons.restaurant, color: AppColors.primary, size: 30),
+          child: const Icon(
+            Icons.restaurant,
+            color: AppColors.primary,
+            size: 30,
+          ),
         ),
         title: Text(
           recipe.name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -503,18 +507,21 @@ class _ProfilViewState extends State<ProfilView> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               recipe.description,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -528,9 +535,9 @@ class _ProfilViewState extends State<ProfilView> {
                     ),
                   ),
                 ),
-                Spacer(),
-                Icon(Icons.favorite, size: 16, color: Colors.red),
-                SizedBox(width: 4),
+                const Spacer(),
+                const Icon(Icons.favorite, size: 16, color: Colors.red),
+                const SizedBox(width: 4),
                 Text(
                   '${recipe.likes}',
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),

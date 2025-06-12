@@ -61,24 +61,53 @@ class _AddRecipeViewState extends State<AddRecipeView> {
         userObjectId = mongo.ObjectId();
       }
 
+      // Conversion des chaînes en entiers avec valeurs par défaut
+      final int prepTimeValue =
+          int.tryParse(_prepTimeController.text.trim()) ?? 30;
+      final int cookingTimeValue =
+          int.tryParse(_cookingTimeController.text.trim()) ?? 20;
+
+      // Extraction des ingrédients et instructions à partir du texte de préparation
+      final String prepText = _preparationController.text.trim();
+      final List<String> extractedLines =
+          prepText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+
+      // Séparation des ingrédients et instructions (hypothèse : les 1/3 premières lignes sont des ingrédients)
+      int ingredientEndIndex = extractedLines.length ~/ 3;
+      List<String> ingredients =
+          extractedLines.take(ingredientEndIndex).toList();
+      List<String> instructions =
+          extractedLines.skip(ingredientEndIndex).toList();
+
+      // Si pas d'ingrédients détectés, fournir une liste vide (mais non null)
+      if (ingredients.isEmpty) ingredients = ['Ingrédients non spécifiés'];
+      if (instructions.isEmpty) instructions = ['Instructions non spécifiées'];
+
       final recipe = Recipe(
         id: null,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         preparation: _preparationController.text.trim(),
-        prepTime: _prepTimeController.text.trim(),
-        cookingTime: _cookingTimeController.text.trim(),
+        prepTime: prepTimeValue,
+        cookingTime: cookingTimeValue,
         category: _selectedCategory,
         imagePath: _image?.path,
         createdAt: DateTime.now(),
         authorId: userObjectId,
+        // Ajouter les champs requis correctement
+        ingredients: ingredients,
+        instructions: instructions.join(
+          '\n',
+        ), // Joindre les instructions en une seule chaîne
+        servings: 4, // Valeur par défaut
+        likes: 0, // Valeur par défaut
       );
 
       await RecipeService.instance.saveRecipe(recipe);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Recette ajoutée avec succès !'),
             backgroundColor: AppColors.secondary,
           ),
@@ -107,7 +136,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "Ajouter une recette",
           style: TextStyle(
             fontFamily: 'Playfair Display',
@@ -115,7 +144,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -131,7 +160,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     (value) =>
                         value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildTextField(
                 controller: _descriptionController,
                 hintText: "Description",
@@ -140,7 +169,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     (value) =>
                         value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildTextField(
                 controller: _preparationController,
                 hintText: "Mode de préparation et ingrédients",
@@ -149,7 +178,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                     (value) =>
                         value?.isEmpty == true ? 'Ce champ est requis' : null,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
@@ -159,7 +188,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: _buildTextField(
                       controller: _cookingTimeController,
@@ -169,8 +198,8 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Catégorie",
                 style: TextStyle(
                   fontFamily: 'Playfair Display',
@@ -179,7 +208,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children:
                     _categories.map((category) {
@@ -189,8 +218,8 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                               () =>
                                   setState(() => _selectedCategory = category),
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4),
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color:
                                   _selectedCategory == category
@@ -215,12 +244,12 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                       );
                     }).toList(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: _pickImage,
                 child: Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -230,17 +259,17 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                   child: Column(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.camera_alt,
                         color: AppColors.textSecondary,
                         size: 30,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         _image != null
                             ? "Image sélectionnée"
                             : "Ajouter une image (optionnel)",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Raleway',
                           color: AppColors.textSecondary,
                         ),
@@ -249,7 +278,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -263,8 +292,8 @@ class _AddRecipeViewState extends State<AddRecipeView> {
                   ),
                   child:
                       _isLoading
-                          ? CircularProgressIndicator(color: Colors.white)
-                          : Text(
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
                             "Enregistrer",
                             style: TextStyle(
                               fontFamily: 'Raleway',
@@ -294,7 +323,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
       maxLines: maxLines,
       keyboardType: keyboardType,
       validator: validator,
-      style: TextStyle(fontFamily: 'Raleway'),
+      style: const TextStyle(fontFamily: 'Raleway'),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
@@ -307,7 +336,7 @@ class _AddRecipeViewState extends State<AddRecipeView> {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.all(16),
+        contentPadding: const EdgeInsets.all(16),
       ),
     );
   }

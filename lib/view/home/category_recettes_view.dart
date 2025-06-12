@@ -79,12 +79,12 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.category,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Playfair Display',
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -92,7 +92,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: Colors.white),
+            icon: const Icon(Icons.add, color: Colors.white),
             onPressed: () async {
               await Navigator.push(
                 context,
@@ -107,7 +107,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
       ),
       body:
           _isLoading
-              ? Center(
+              ? const Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
               )
               : Column(
@@ -123,20 +123,20 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 10,
-                            offset: Offset(0, 5),
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
                       child: TextField(
                         controller: txtSearch,
-                        style: TextStyle(fontFamily: 'Raleway'),
+                        style: const TextStyle(fontFamily: 'Raleway'),
                         decoration: InputDecoration(
                           hintText: "Rechercher une recette",
                           hintStyle: TextStyle(
                             fontFamily: 'Raleway',
                             color: AppColors.textSecondary.withOpacity(0.7),
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.search,
                             color: AppColors.textSecondary,
                           ),
@@ -162,7 +162,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                               color: AppColors.textSecondary.withOpacity(0.5),
                             ),
                             const SizedBox(height: 16),
-                            Text(
+                            const Text(
                               "Aucune recette disponible\nTouchez + pour en ajouter",
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -189,7 +189,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                               color: AppColors.textSecondary.withOpacity(0.5),
                             ),
                             const SizedBox(height: 16),
-                            Text(
+                            const Text(
                               "Aucun résultat trouvé",
                               style: TextStyle(
                                 fontFamily: 'Raleway',
@@ -233,7 +233,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                           height: 70,
                                           color: AppColors.secondary
                                               .withOpacity(0.3),
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.restaurant,
                                             color: AppColors.secondary,
                                           ),
@@ -241,7 +241,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                               ),
                               title: Text(
                                 recipe.name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Playfair Display',
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.textPrimary,
@@ -254,7 +254,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                     recipe.description.length > 50
                                         ? "${recipe.description.substring(0, 50)}..."
                                         : recipe.description,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Raleway',
                                       color: AppColors.textSecondary,
                                     ),
@@ -262,7 +262,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.access_time,
                                         size: 14,
                                         color: AppColors.primary,
@@ -270,14 +270,14 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                       const SizedBox(width: 4),
                                       Text(
                                         "Cuisson: ${recipe.cookingTime} min",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: 'Raleway',
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-                                      Icon(
+                                      const Icon(
                                         Icons.timer_outlined,
                                         size: 14,
                                         color: AppColors.primary,
@@ -285,7 +285,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                       const SizedBox(width: 4),
                                       Text(
                                         "Préparation: ${recipe.prepTime} min",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: 'Raleway',
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
@@ -302,7 +302,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                   );
                                   _loadRecipes();
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.favorite,
                                   color: AppColors.primary,
                                 ),

@@ -59,12 +59,16 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
             createdAt: _recipe.createdAt,
             authorId: _recipe.authorId,
             likes: _recipe.likes + 1,
+            // Ajout des paramètres requis manquants
+            ingredients: _recipe.ingredients,
+            instructions: _recipe.instructions,
+            servings: _recipe.servings,
           );
           _isLiked = true;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Recette ajoutée aux favoris !'),
             backgroundColor: AppColors.primary,
             duration: Duration(seconds: 2),
@@ -73,7 +77,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Erreur lors de l\'ajout aux favoris'),
           backgroundColor: Colors.red,
         ),
@@ -91,7 +95,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
             expandedHeight: 300,
             pinned: true,
             backgroundColor: AppColors.primary,
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 _recipe.name,
@@ -101,7 +105,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                   fontWeight: FontWeight.bold,
                   shadows: [
                     Shadow(
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                       blurRadius: 3,
                       color: Colors.black.withOpacity(0.5),
                     ),
@@ -159,7 +163,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -167,7 +171,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
@@ -177,7 +181,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                         ),
                         child: Text(
                           _recipe.category,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Raleway',
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -185,12 +189,12 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                           ),
                         ),
                       ),
-                      Spacer(),
-                      Icon(Icons.favorite, color: Colors.red, size: 20),
-                      SizedBox(width: 4),
+                      const Spacer(),
+                      const Icon(Icons.favorite, color: Colors.red, size: 20),
+                      const SizedBox(width: 4),
                       Text(
                         '${_recipe.likes}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Raleway',
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
@@ -199,12 +203,12 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ],
                   ),
 
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Afficher l'auteur de la recette
                   Container(
                     width: double.infinity, // CORRECTION: Largeur fixe
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppColors.secondary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -218,19 +222,19 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                             _authorName.isNotEmpty
                                 ? _authorName[0].toUpperCase()
                                 : 'U',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Expanded(
                           // CORRECTION: Utiliser Expanded pour éviter le débordement
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Recette de',
                                 style: TextStyle(
                                   fontFamily: 'Raleway',
@@ -242,7 +246,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                                 _authorName.isNotEmpty
                                     ? _authorName
                                     : 'Utilisateur inconnu',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Raleway',
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -259,7 +263,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ),
                   ),
 
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Temps de préparation et cuisson
                   Row(
@@ -272,7 +276,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                           color: AppColors.secondary,
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: _buildTimeCard(
                           icon: Icons.local_fire_department,
@@ -284,14 +288,14 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ],
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   // Description
                   _buildSectionTitle('Description'),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text(
                     _recipe.description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Raleway',
                       fontSize: 16,
                       color: AppColors.textSecondary,
@@ -299,18 +303,18 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ),
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   // Préparation
                   _buildSectionTitle('Instructions'),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Container(
                     width: double.infinity, // CORRECTION: Largeur fixe
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: AppColors.shadow,
                           blurRadius: 10,
@@ -320,7 +324,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ),
                     child: Text(
                       _recipe.preparation,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 15,
                         color: AppColors.textPrimary,
@@ -329,25 +333,25 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ),
                   ),
 
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
                   // Informations supplémentaires
                   Container(
                     width: double.infinity, // CORRECTION: Largeur fixe
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today, color: AppColors.primary),
-                        SizedBox(width: 12),
+                        const Icon(Icons.calendar_today, color: AppColors.primary),
+                        const SizedBox(width: 12),
                         Expanded(
                           // CORRECTION: Utiliser Expanded
                           child: Text(
                             'Ajoutée le ${_formatDate(_recipe.createdAt)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Raleway',
                               color: AppColors.textSecondary,
                               fontSize: 14,
@@ -358,7 +362,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
                     ),
                   ),
 
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -375,11 +379,11 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
     required Color color,
   }) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
             blurRadius: 8,
@@ -390,20 +394,20 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
       child: Column(
         children: [
           Icon(icon, color: color, size: 32),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Raleway',
               fontSize: 12,
               color: AppColors.textSecondary,
             ),
             textAlign: TextAlign.center, // CORRECTION: Centrer le texte
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             time,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Playfair Display',
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -419,7 +423,7 @@ class _RecipeDetailViewState extends State<RecipeDetailView> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
         fontFamily: 'Playfair Display',
         fontSize: 24,
         fontWeight: FontWeight.bold,

@@ -49,7 +49,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Profil mis à jour avec succès !'),
             backgroundColor: AppColors.primary,
           ),
@@ -75,14 +75,14 @@ class _EditProfileViewState extends State<EditProfileView> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(
+        title: const Text(
           'Modifier le profil',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
@@ -91,7 +91,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               Container(
                 width: 100,
                 height: 100,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
@@ -100,7 +100,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     widget.user.name.isNotEmpty
                         ? widget.user.name[0].toUpperCase()
                         : 'U',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 ),
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Champ nom
               TextFormField(
@@ -122,7 +122,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.all(16),
+                  contentPadding: const EdgeInsets.all(16),
                 ),
                 validator: (value) {
                   if (value?.isEmpty == true) {
@@ -132,7 +132,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 },
               ),
 
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Champ email
               TextFormField(
@@ -146,7 +146,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.all(16),
+                  contentPadding: const EdgeInsets.all(16),
                 ),
                 validator: (value) {
                   if (value?.isEmpty == true) {
@@ -159,7 +159,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 },
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // Bouton sauvegarder
               SizedBox(
@@ -175,8 +175,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                   ),
                   child:
                       _isLoading
-                          ? CircularProgressIndicator(color: Colors.white)
-                          : Text(
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
                             'Sauvegarder',
                             style: TextStyle(
                               fontSize: 16,

@@ -19,7 +19,7 @@ class UserRecipesView extends StatefulWidget {
 class _UserRecipesViewState extends State<UserRecipesView> {
   List<Recipe> _userRecipes = [];
   bool _isLoading = true;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<Recipe> _filteredRecipes = [];
 
   @override
@@ -91,14 +91,14 @@ class _UserRecipesViewState extends State<UserRecipesView> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(
+        title: const Text(
           'Mes recettes',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: Colors.white),
+            icon: const Icon(Icons.add, color: Colors.white),
             onPressed: () async {
               final result = await Navigator.push(
                 context,
@@ -130,11 +130,11 @@ class _UserRecipesViewState extends State<UserRecipesView> {
               ),
               child: TextField(
                 controller: _searchController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Rechercher dans mes recettes...",
                   prefixIcon: Icon(Icons.search, color: AppColors.primary),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
                 ),
               ),
             ),
@@ -144,7 +144,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -156,13 +156,13 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                     children: [
                       Text(
                         '${_userRecipes.length}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Recettes',
                         style: TextStyle(
                           fontSize: 12,
@@ -175,13 +175,13 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                     children: [
                       Text(
                         '${_userRecipes.fold(0, (sum, recipe) => sum + recipe.likes)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Likes totaux',
                         style: TextStyle(
                           fontSize: 12,
@@ -195,13 +195,13 @@ class _UserRecipesViewState extends State<UserRecipesView> {
             ),
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Liste des recettes
           Expanded(
             child:
                 _isLoading
-                    ? Center(
+                    ? const Center(
                       child: CircularProgressIndicator(
                         color: AppColors.primary,
                       ),
@@ -216,7 +216,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                             size: 80,
                             color: Colors.grey[400],
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             _userRecipes.isEmpty
                                 ? 'Aucune recette ajoutée'
@@ -227,7 +227,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                             ),
                           ),
                           if (_userRecipes.isEmpty) ...[
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               'Touchez + pour ajouter votre première recette !',
                               style: TextStyle(
@@ -241,7 +241,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                       ),
                     )
                     : ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: _filteredRecipes.length,
                       itemBuilder: (context, index) {
                         final recipe = _filteredRecipes[index];
@@ -256,7 +256,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
 
   Widget _buildRecipeCard(Recipe recipe) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -264,12 +264,12 @@ class _UserRecipesViewState extends State<UserRecipesView> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.all(16),
+        contentPadding: const EdgeInsets.all(16),
         leading: Container(
           width: 60,
           height: 60,
@@ -277,11 +277,11 @@ class _UserRecipesViewState extends State<UserRecipesView> {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(Icons.restaurant, color: AppColors.primary, size: 30),
+          child: const Icon(Icons.restaurant, color: AppColors.primary, size: 30),
         ),
         title: Text(
           recipe.name,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -290,18 +290,18 @@ class _UserRecipesViewState extends State<UserRecipesView> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               recipe.description,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -315,14 +315,14 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   '${recipe.prepTime}min prep',
                   style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                 ),
-                Spacer(),
-                Icon(Icons.favorite, size: 16, color: Colors.red),
-                SizedBox(width: 4),
+                const Spacer(),
+                const Icon(Icons.favorite, size: 16, color: Colors.red),
+                const SizedBox(width: 4),
                 Text(
                   '${recipe.likes}',
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),

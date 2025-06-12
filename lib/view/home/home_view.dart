@@ -103,14 +103,14 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: AppColors.background,
       body:
           _isLoading
-              ? Center(
+              ? const Center(
                 child: CircularProgressIndicator(color: AppColors.primary),
               )
               : RefreshIndicator(
                 onRefresh: _loadData,
                 color: AppColors.primary,
                 child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40),
                     child: Column(
@@ -118,26 +118,26 @@ class _HomeViewState extends State<HomeView> {
                       children: [
                         // Header avec salutation
                         _buildHeader(),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
                         // Recettes récemment ajoutées
                         if (_recentRecipes.isNotEmpty) ...[
                           _buildSectionTitle("Recettes récemment ajoutées"),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           _buildRecentRecipesSection(),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                         ],
 
                         // Section Catégories
                         _buildSectionTitle("Catégories"),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         _buildCategoriesSection(),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
 
                         // Recettes populaires
                         if (_popularRecipes.isNotEmpty) ...[
                           _buildSectionTitle("Recettes populaires"),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                           _buildPopularRecipesSection(),
                         ] else ...[
                           _buildEmptyState(),
@@ -161,14 +161,14 @@ class _HomeViewState extends State<HomeView> {
             children: [
               Text(
                 "Bonjour${_userName.isNotEmpty ? ' $_userName' : ''}!",
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Playfair Display',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                 ),
               ),
-              Text(
+              const Text(
                 "Que cuisinons-nous aujourd'hui ?",
                 style: TextStyle(
                   fontFamily: 'Raleway',
@@ -179,7 +179,7 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -196,13 +196,13 @@ class _HomeViewState extends State<HomeView> {
                   _userName.isNotEmpty
                       ? Text(
                         _userName[0].toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       )
-                      : Icon(Icons.person, color: Colors.white, size: 28),
+                      : const Icon(Icons.person, color: Colors.white, size: 28),
             ),
           ),
         ],
@@ -215,7 +215,7 @@ class _HomeViewState extends State<HomeView> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontFamily: 'Playfair Display',
           fontSize: 22,
           fontWeight: FontWeight.bold,
@@ -263,7 +263,7 @@ class _HomeViewState extends State<HomeView> {
                   BoxShadow(
                     color: AppColors.primary.withOpacity(0.3),
                     blurRadius: 15,
-                    offset: Offset(0, 8),
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
@@ -277,7 +277,7 @@ class _HomeViewState extends State<HomeView> {
                         Expanded(
                           child: Text(
                             recipe.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Playfair Display',
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _HomeViewState extends State<HomeView> {
                             authorName.isNotEmpty
                                 ? authorName[0].toUpperCase()
                                 : 'U',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -301,7 +301,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       'Par $authorName',
                       style: TextStyle(
@@ -310,7 +310,7 @@ class _HomeViewState extends State<HomeView> {
                         fontSize: 12,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       recipe.description,
                       style: TextStyle(
@@ -321,23 +321,23 @@ class _HomeViewState extends State<HomeView> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Row(
                       children: [
-                        Icon(Icons.timer, color: Colors.white, size: 18),
-                        SizedBox(width: 6),
+                        const Icon(Icons.timer, color: Colors.white, size: 18),
+                        const SizedBox(width: 6),
                         Text(
                           "${recipe.prepTime} min",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: 'Raleway',
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
@@ -347,7 +347,7 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           child: Text(
                             recipe.category,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Raleway',
                               color: AppColors.primary,
                               fontSize: 12,
@@ -368,7 +368,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildCategoriesSection() {
-    return Container(
+    return SizedBox(
       height: 140,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -393,7 +393,7 @@ class _HomeViewState extends State<HomeView> {
               decoration: BoxDecoration(
                 color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: AppColors.shadow,
                     blurRadius: 15,
@@ -417,10 +417,10 @@ class _HomeViewState extends State<HomeView> {
                       color: category['color'],
                     ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Text(
                     category['name'],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Raleway',
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -457,11 +457,11 @@ class _HomeViewState extends State<HomeView> {
             );
           },
           child: Container(
-            margin: EdgeInsets.only(bottom: 16),
+            margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
               color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: AppColors.shadow,
                   blurRadius: 10,
@@ -470,7 +470,7 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
             child: ListTile(
-              contentPadding: EdgeInsets.all(16),
+              contentPadding: const EdgeInsets.all(16),
               leading: Container(
                 width: 60,
                 height: 60,
@@ -483,11 +483,11 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(Icons.restaurant, color: Colors.white, size: 28),
+                child: const Icon(Icons.restaurant, color: Colors.white, size: 28),
               ),
               title: Text(
                 recipe.name,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Playfair Display',
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -497,10 +497,10 @@ class _HomeViewState extends State<HomeView> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     'Par $authorName',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Raleway',
                       color: AppColors.secondary,
                       fontSize: 12,
@@ -509,20 +509,20 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   Text(
                     recipe.category,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Raleway',
                       color: AppColors.textSecondary,
                       fontSize: 12,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.timer, size: 14, color: AppColors.primary),
-                      SizedBox(width: 4),
+                      const Icon(Icons.timer, size: 14, color: AppColors.primary),
+                      const SizedBox(width: 4),
                       Text(
                         "${recipe.prepTime} min",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Raleway',
                           fontSize: 12,
                           color: AppColors.textSecondary,
@@ -535,11 +535,11 @@ class _HomeViewState extends State<HomeView> {
               trailing: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.favorite, color: AppColors.primary, size: 20),
-                  SizedBox(height: 4),
+                  const Icon(Icons.favorite, color: AppColors.primary, size: 20),
+                  const SizedBox(height: 4),
                   Text(
                     '${recipe.likes}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Raleway',
                       fontWeight: FontWeight.bold,
                       color: AppColors.textSecondary,
@@ -561,7 +561,7 @@ class _HomeViewState extends State<HomeView> {
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.shadow,
             blurRadius: 10,
@@ -576,8 +576,8 @@ class _HomeViewState extends State<HomeView> {
             size: 80,
             color: AppColors.textSecondary.withOpacity(0.5),
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             "Aucune recette disponible",
             style: TextStyle(
               fontFamily: 'Playfair Display',
@@ -586,8 +586,8 @@ class _HomeViewState extends State<HomeView> {
               color: AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 10),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             "Commencez par ajouter votre première recette !",
             textAlign: TextAlign.center,
             style: TextStyle(

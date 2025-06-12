@@ -62,12 +62,12 @@ class _OTPViewState extends State<OTPView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Erreur'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -102,7 +102,7 @@ class _OTPViewState extends State<OTPView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Vérification par code",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),
@@ -148,9 +148,9 @@ class _OTPViewState extends State<OTPView> {
                   cursorColor: TColor.primary,
                   upperChild: Column(
                     children: [
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Icon(Icons.mail_outline, size: 80, color: TColor.primary),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ],
                   ),
                   cursorWidth: 2,

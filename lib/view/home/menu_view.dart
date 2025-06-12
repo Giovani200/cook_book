@@ -152,7 +152,7 @@ class _MenuViewState extends State<MenuView> {
             ),
           ),
         ),
-        body: Center(child: CircularProgressIndicator()),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -169,12 +169,6 @@ class _MenuViewState extends State<MenuView> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined, color: TColor.primaryText),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,11 +183,11 @@ class _MenuViewState extends State<MenuView> {
               ),
               child: TextField(
                 controller: txtSearch,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Rechercher une recette ou une catégorie",
                   prefixIcon: Icon(Icons.search, color: Colors.grey),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),
@@ -264,7 +258,7 @@ class _MenuViewState extends State<MenuView> {
                       decoration: BoxDecoration(
                         color: Colors.orange.withOpacity(0.2),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.restaurant,
                         color: Colors.orange,
                         size: 30,
@@ -291,7 +285,7 @@ class _MenuViewState extends State<MenuView> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         "Catégorie: ${recipe.category}",
                         style: TextStyle(
@@ -367,7 +361,7 @@ class _MenuViewState extends State<MenuView> {
                   category["image"],
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.restaurant, color: Colors.orange);
+                    return const Icon(Icons.restaurant, color: Colors.orange);
                   },
                 ),
               ),

@@ -1,20 +1,16 @@
 // Service de gestion des recettes avec stockage MongoDB
-import '../models/recipe_model.dart';
-import 'mongodb_service.dart';
+import 'package:cook_book/models/recipe_model.dart';
+import 'package:cook_book/services/mongodb_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class RecipeService {
-  // Instance unique (Singleton)
-  static RecipeService? _instance;
+  static final RecipeService _instance = RecipeService._internal();
+  factory RecipeService() => _instance;
+  RecipeService._internal();
 
-  // Accesseur pour l'instance unique
-  static RecipeService get instance {
-    _instance ??= RecipeService._();
-    return _instance!;
-  }
+  static RecipeService get instance => _instance;
 
-  // Constructeur privé
-  RecipeService._();
+  final String _collectionName = 'recipes';
 
   // Enregistre une nouvelle recette dans MongoDB
   Future<void> saveRecipe(Recipe recipe) async {
@@ -27,16 +23,62 @@ class RecipeService {
     }
   }
 
+  // Enregistre plusieurs recettes
+  Future<int> saveRecipes(List<Recipe> recipes) async {
+    try {
+      return await MongoDBService.instance.bulkSaveRecipes(recipes);
+    } catch (e) {
+      print('Erreur lors de l\'enregistrement des recettes: $e');
+      return 0;
+    }
+  }
+
+  // Vérifie si des recettes existent déjà
+  Future<bool> hasRecipes() async {
+    try {
+      final db = MongoDBService.instance.db;
+      if (db == null) return false;
+
+      final collection = db.collection(_collectionName);
+      final count = await collection.count();
+      return count > 0;
+    } catch (e) {
+      print('Erreur lors de la vérification des recettes: $e');
+      return false;
+    }
+  }
+
   // Récupère toutes les recettes depuis MongoDB
   Future<List<Recipe>> getAllRecipes() async {
-    print('RecipeService: Récupération de toutes les recettes');
-    return await MongoDBService.instance.getAllRecipes();
+    List<Recipe> recipes = [];
+    try {
+      final db = MongoDBService.instance.db;
+      if (db == null) return recipes;
+
+      final collection = db.collection(_collectionName);
+      final result = await collection.find().toList();
+      recipes = result.map((data) => Recipe.fromMap(data)).toList();
+    } catch (e) {
+      print('Erreur lors de la récupération des recettes: $e');
+    }
+    return recipes;
   }
 
   // Récupère les recettes d'une catégorie spécifique depuis MongoDB
   Future<List<Recipe>> getRecipesByCategory(String category) async {
-    print('RecipeService: Récupération recettes pour catégorie $category');
-    return await MongoDBService.instance.getRecipesByCategory(category);
+    List<Recipe> recipes = [];
+    try {
+      final db = MongoDBService.instance.db;
+      if (db == null) return recipes;
+
+      final collection = db.collection(_collectionName);
+      final result =
+          await collection.find(where.eq('category', category)).toList();
+      recipes = result.map((data) => Recipe.fromMap(data)).toList();
+    } catch (e) {
+      print('Erreur lors de la récupération des recettes par catégorie: $e');
+    }
+    return recipes;
   }
 
   // Récupère les recettes les plus populaires depuis MongoDB
@@ -109,4 +151,10 @@ class RecipeService {
     print('RecipeService: Récupération recettes pour utilisateur $userId');
     return await MongoDBService.instance.getRecipesByUserId(userId);
   }
+}
+
+// NOUVEAU: Récupère les recettes d'un utilisateur spécifique
+Future<List<Recipe>> getRecipesByUserId(ObjectId userId) async {
+  print('RecipeService: Récupération recettes pour utilisateur $userId');
+  return await MongoDBService.instance.getRecipesByUserId(userId);
 }

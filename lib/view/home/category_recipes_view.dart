@@ -18,7 +18,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
   List<Map<String, dynamic>> _recipes = []; // CHANGEMENT: Map au lieu de Recipe
   List<Map<String, dynamic>> _filteredRecipes = [];
   bool _isLoading = true;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -76,13 +76,13 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
         backgroundColor: AppColors.primary,
         title: Text(
           widget.category,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Playfair Display',
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
@@ -103,11 +103,11 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
               ),
               child: TextField(
                 controller: _searchController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Rechercher une recette...",
                   prefixIcon: Icon(Icons.search, color: AppColors.primary),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
                 ),
               ),
             ),
@@ -117,13 +117,13 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
           Expanded(
             child:
                 _isLoading
-                    ? Center(
+                    ? const Center(
                       child: CircularProgressIndicator(
                         color: AppColors.primary,
                       ),
                     )
                     : _filteredRecipes.isEmpty
-                    ? Center(
+                    ? const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -145,7 +145,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                       ),
                     )
                     : ListView.builder(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       itemCount: _filteredRecipes.length,
                       itemBuilder: (context, index) {
                         final recipeData = _filteredRecipes[index];
@@ -153,7 +153,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                         final String authorName = recipeData['authorName'];
 
                         return Card(
-                          margin: EdgeInsets.only(bottom: 16),
+                          margin: const EdgeInsets.only(bottom: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -170,7 +170,7 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                             },
                             borderRadius: BorderRadius.circular(12),
                             child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -183,17 +183,17 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                           authorName.isNotEmpty
                                               ? authorName[0].toUpperCase()
                                               : 'U',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
                                         'Par $authorName',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: 'Raleway',
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
@@ -201,71 +201,71 @@ class _CategoryRecipesViewState extends State<CategoryRecipesView> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 12),
+                                  const SizedBox(height: 12),
                                   Text(
                                     recipe.name,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Playfair Display',
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textPrimary,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Text(
                                     recipe.description,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Raleway',
                                       color: AppColors.textSecondary,
                                     ),
                                   ),
-                                  SizedBox(height: 12),
+                                  const SizedBox(height: 12),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.timer,
                                         size: 16,
                                         color: AppColors.primary,
                                       ),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Text(
                                         '${recipe.prepTime} min prep',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: 'Raleway',
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
                                         ),
                                       ),
-                                      SizedBox(width: 16),
-                                      Icon(
+                                      const SizedBox(width: 16),
+                                      const Icon(
                                         Icons.local_fire_department,
                                         size: 16,
                                         color: AppColors.primary,
                                       ),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Text(
                                         '${recipe.cookingTime} min cuisson',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontFamily: 'Raleway',
                                           fontSize: 12,
                                           color: AppColors.textSecondary,
                                         ),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       IconButton(
                                         onPressed: () async {
                                           await RecipeService.instance
                                               .likeRecipe(recipe.id);
                                           _loadRecipes();
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.favorite,
                                           color: AppColors.primary,
                                         ),
                                       ),
                                       Text(
                                         '${recipe.likes}',
-                                        style: TextStyle(fontFamily: 'Raleway'),
+                                        style: const TextStyle(fontFamily: 'Raleway'),
                                       ),
                                     ],
                                   ),

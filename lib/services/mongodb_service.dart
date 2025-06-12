@@ -18,6 +18,9 @@ class MongoDBService {
   // Constructeur privé pour le Singleton
   MongoDBService._internal();
 
+  // Getter pour accéder à la base de données
+  Db? get db => _db;
+
   // Méthode pour établir la connexion à MongoDB
   Future<void> connect() async {
     try {
@@ -60,7 +63,7 @@ class MongoDBService {
       }
     } catch (e) {
       print('ERREUR CRITIQUE lors de la connexion à MongoDB: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -243,7 +246,7 @@ class MongoDBService {
       print('MongoDB initialisé avec succès');
     } catch (e) {
       print('Erreur lors de l\'initialisation de MongoDB: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -450,6 +453,35 @@ class MongoDBService {
     } catch (e) {
       print('❌ ERREUR récupération recettes par user ID: $e');
       return [];
+    }
+  }
+
+  // Ajouter cette méthode pour une importation optimisée en masse
+  Future<int> bulkSaveRecipes(List<Recipe> recipes) async {
+    try {
+      await connect();
+
+      if (_db == null || !_db!.isConnected) {
+        print('❌ ERREUR: DB non connectée');
+        return 0;
+      }
+
+      final collection = _db!.collection('recipes');
+
+      // Convertir toutes les recettes en Map pour l'insertion
+      final List<Map<String, dynamic>> recipesData =
+          recipes.map((recipe) => recipe.toMap()).toList();
+
+      // Utiliser insertMany pour une insertion optimisée
+      final result = await collection.insertMany(recipesData);
+
+      print(
+        '✅ Insertion en masse réussie: ${result.ok} / ${result.nInserted} insérés',
+      );
+      return result.nInserted;
+    } catch (e) {
+      print('❌ EXCEPTION importation en masse: $e');
+      return 0;
     }
   }
 }

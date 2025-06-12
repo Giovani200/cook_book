@@ -67,12 +67,12 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Déconnexion'),
-          content: Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
+          title: const Text('Déconnexion'),
+          content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
             ),
             TextButton(
               onPressed: () async {
@@ -88,7 +88,7 @@ class _SettingsViewState extends State<SettingsView> {
                   );
                 }
               },
-              child: Text('Déconnexion', style: TextStyle(color: Colors.red)),
+              child: const Text('Déconnexion', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -101,30 +101,30 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Vider le cache'),
-          content: Text(
+          title: const Text('Vider le cache'),
+          content: const Text(
             'Cette action supprimera les données temporaires. Continuer ?',
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
                 // Simuler la suppression du cache
-                await Future.delayed(Duration(seconds: 1));
+                await Future.delayed(const Duration(seconds: 1));
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Cache vidé avec succès'),
                       backgroundColor: AppColors.primary,
                     ),
                   );
                 }
               },
-              child: Text('Vider'),
+              child: const Text('Vider'),
             ),
           ],
         );
@@ -137,7 +137,7 @@ class _SettingsViewState extends State<SettingsView> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: Colors.grey[50],
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(color: AppColors.primary),
         ),
       );
@@ -147,11 +147,11 @@ class _SettingsViewState extends State<SettingsView> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(
+        title: const Text(
           'Paramètres',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -160,7 +160,7 @@ class _SettingsViewState extends State<SettingsView> {
             // En-tête utilisateur
             Container(
               width: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.primary,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
@@ -168,7 +168,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
                 child: Row(
                   children: [
                     CircleAvatar(
@@ -178,21 +178,21 @@ class _SettingsViewState extends State<SettingsView> {
                         _currentUser?.name.isNotEmpty == true
                             ? _currentUser!.name[0].toUpperCase()
                             : 'U',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             _currentUser?.name ?? 'Utilisateur',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -213,7 +213,7 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Section Compte
             _buildSectionTitle('Compte'),
@@ -250,7 +250,7 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ]),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Section Préférences
             _buildSectionTitle('Préférences'),
@@ -279,7 +279,7 @@ class _SettingsViewState extends State<SettingsView> {
                   });
                   _saveSettings();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text(
                         'Redémarrez l\'app pour voir les changements',
                       ),
@@ -293,14 +293,14 @@ class _SettingsViewState extends State<SettingsView> {
                 icon: Icons.language,
                 title: 'Langue',
                 subtitle: _selectedLanguage,
-                trailing: Icon(Icons.chevron_right, color: Colors.grey),
+                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {
                   _showLanguageDialog();
                 },
               ),
             ]),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Section Données et stockage
             _buildSectionTitle('Données et stockage'),
@@ -322,7 +322,7 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ]),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Section Support
             _buildSectionTitle('Support'),
@@ -358,11 +358,11 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ]),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Bouton de déconnexion
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -374,7 +374,7 @@ class _SettingsViewState extends State<SettingsView> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.logout, color: Colors.white),
@@ -393,7 +393,7 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ),
 
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -402,12 +402,12 @@ class _SettingsViewState extends State<SettingsView> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
@@ -419,7 +419,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   Widget _buildSettingsCard(List<Widget> children) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -427,7 +427,7 @@ class _SettingsViewState extends State<SettingsView> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -444,7 +444,7 @@ class _SettingsViewState extends State<SettingsView> {
   }) {
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppColors.primary.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
@@ -453,16 +453,16 @@ class _SettingsViewState extends State<SettingsView> {
       ),
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+        style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
       ),
-      trailing: trailing ?? Icon(Icons.chevron_right, color: Colors.grey),
+      trailing: trailing ?? const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: onTap,
     );
   }
@@ -476,7 +476,7 @@ class _SettingsViewState extends State<SettingsView> {
   }) {
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppColors.primary.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
@@ -485,14 +485,14 @@ class _SettingsViewState extends State<SettingsView> {
       ),
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+        style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
       ),
       trailing: Switch(
         value: value,
@@ -516,12 +516,12 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Choisir la langue'),
+          title: const Text('Choisir la langue'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RadioListTile<String>(
-                title: Text('Français'),
+                title: const Text('Français'),
                 value: 'Français',
                 groupValue: _selectedLanguage,
                 onChanged: (value) {
@@ -533,7 +533,7 @@ class _SettingsViewState extends State<SettingsView> {
                 },
               ),
               RadioListTile<String>(
-                title: Text('English'),
+                title: const Text('English'),
                 value: 'English',
                 groupValue: _selectedLanguage,
                 onChanged: (value) {
@@ -545,7 +545,7 @@ class _SettingsViewState extends State<SettingsView> {
                 },
               ),
               RadioListTile<String>(
-                title: Text('Español'),
+                title: const Text('Español'),
                 value: 'Español',
                 groupValue: _selectedLanguage,
                 onChanged: (value) {
@@ -570,16 +570,16 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Envoyer un commentaire'),
+          title: const Text('Envoyer un commentaire'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Votre avis nous est précieux !'),
-              SizedBox(height: 16),
+              const Text('Votre avis nous est précieux !'),
+              const SizedBox(height: 16),
               TextField(
                 controller: feedbackController,
                 maxLines: 4,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Écrivez votre commentaire ici...',
                   border: OutlineInputBorder(),
                 ),
@@ -589,19 +589,19 @@ class _SettingsViewState extends State<SettingsView> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Annuler'),
+              child: const Text('Annuler'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('Merci pour votre commentaire !'),
                     backgroundColor: AppColors.primary,
                   ),
                 );
               },
-              child: Text('Envoyer'),
+              child: const Text('Envoyer'),
             ),
           ],
         );
@@ -614,14 +614,14 @@ class _SettingsViewState extends State<SettingsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Bientôt disponible'),
+          title: const Text('Bientôt disponible'),
           content: Text(
             'La fonctionnalité "$feature" sera disponible dans une future mise à jour.',
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
