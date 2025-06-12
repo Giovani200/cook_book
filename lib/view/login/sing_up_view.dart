@@ -99,12 +99,12 @@ class _SingUpViewState extends State<SingUpView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Erreur'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -135,7 +135,7 @@ class _SingUpViewState extends State<SingUpView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Inscription",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),

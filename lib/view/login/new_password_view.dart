@@ -69,12 +69,12 @@ class _NewPasswordViewState extends State<NewPasswordView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Erreur'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -87,8 +87,8 @@ class _NewPasswordViewState extends State<NewPasswordView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Succès'),
-          content: Text('Votre mot de passe a été mis à jour avec succès.'),
+          title: const Text('Succès'),
+          content: const Text('Votre mot de passe a été mis à jour avec succès.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -99,7 +99,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
                   (route) => false,
                 );
               },
-              child: Text('Se connecter'),
+              child: const Text('Se connecter'),
             ),
           ],
         );
@@ -124,7 +124,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Nouveau mot de passe",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),

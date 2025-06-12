@@ -31,7 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  shared_preferences: ^2.2.2
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
   image_picker: ^1.0.4
   supabase_flutter: ^2.9.0
   otp_pin_field: ^1.4.1

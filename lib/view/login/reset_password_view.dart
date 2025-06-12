@@ -62,12 +62,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Erreur'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -92,7 +92,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Réinitialiser le mot de passe",
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),
