@@ -103,4 +103,10 @@ class RecipeService {
 
     return recipesWithAuthors;
   }
+
+  // NOUVEAU: Récupère les recettes d'un utilisateur spécifique
+  Future<List<Recipe>> getRecipesByUserId(ObjectId userId) async {
+    print('RecipeService: Récupération recettes pour utilisateur $userId');
+    return await MongoDBService.instance.getRecipesByUserId(userId);
+  }
 }

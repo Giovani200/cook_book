@@ -1,11 +1,12 @@
 import 'package:cook_book/common_widget/round_button.dart';
+import 'package:cook_book/view/login/reset_password_view.dart';
 import 'package:cook_book/view/login/sing_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_book/common/color_extension.dart';
 import 'package:cook_book/common_widget/round_textfield.dart';
+import 'package:cook_book/view/main_tabview/main_tabview.dart';
 import 'package:cook_book/services/mongodb_service.dart';
 import 'package:cook_book/services/user_session.dart';
-import 'package:cook_book/view/main_tabview/main_tabview.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -19,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController txtPassword = TextEditingController();
   bool isLoading = false;
 
-  Future<void> _loginUser() async {
+  Future<void> _handleLogin() async {
     if (txtEmail.text.isEmpty || txtPassword.text.isEmpty) {
       _showErrorDialog('Veuillez remplir tous les champs');
       return;
@@ -30,12 +31,9 @@ class _LoginViewState extends State<LoginView> {
     });
 
     try {
-      print("=== TENTATIVE DE CONNEXION ===");
-      print("Email: ${txtEmail.text.trim()}");
-
-      // Authentifier avec MongoDB (corrigé)
+      // Authentifier l'utilisateur avec MongoDB
       final user = await MongoDBService.instance.authenticateUser(
-        txtEmail.text.trim().toLowerCase(),
+        txtEmail.text.trim(),
         txtPassword.text,
       );
 
@@ -44,41 +42,24 @@ class _LoginViewState extends State<LoginView> {
       });
 
       if (user != null) {
-        print("✅ CONNEXION RÉUSSIE pour: ${user.name}");
-
-        // Sauvegarder la session
+        // Sauvegarder la session utilisateur
         await UserSession.instance.saveUserSession(user);
 
+        // Rediriger vers l'accueil
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Connexion réussie! Bienvenue ${user.name}'),
-              backgroundColor: Colors.green,
-            ),
-          );
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MainTabview()),
           );
         }
       } else {
-        print("❌ CONNEXION ÉCHOUÉE");
         _showErrorDialog('Email ou mot de passe incorrect');
       }
     } catch (e) {
-      print("❌ ERREUR DE CONNEXION: $e");
       setState(() {
         isLoading = false;
       });
-      _showErrorDialog('Erreur lors de la connexion: ${e.toString()}');
-    }
-  }
-
-  // Wrapper pour éviter les problèmes de type avec onPressed
-  void _handleLogin() {
-    if (!isLoading) {
-      _loginUser();
+      _showErrorDialog('Erreur de connexion: ${e.toString()}');
     }
   }
 
@@ -122,7 +103,7 @@ class _LoginViewState extends State<LoginView> {
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
               ),
               Text(
-                "Connectez-vous à votre compte",
+                "Entrez vos identifiants pour vous connecter",
                 style: TextStyle(
                   color: TColor.primaryText,
                   fontSize: 16,
@@ -143,15 +124,39 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 30),
               RoundButton(
-                title: isLoading ? "Connexion en cours..." : "Se connecter",
+                title: isLoading ? "Connexion..." : "Se connecter",
                 onPressed: _handleLogin,
-                type: RoundButtonType.primary,
+                isDisabled: isLoading,
+                type:
+                    RoundButtonType
+                        .primary, // Correction ici : ButtonType -> RoundButtonType
               ),
               const SizedBox(height: 15),
               Center(
                 child: TextButton(
                   onPressed: () {
                     Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ResetPasswordView(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Mot de passe oublié ?",
+                    style: TextStyle(
+                      color: TColor.primaryText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const SingUpView(),

@@ -430,4 +430,26 @@ class MongoDBService {
       return false;
     }
   }
+
+  // NOUVEAU: Récupère les recettes d'un utilisateur spécifique
+  Future<List<Recipe>> getRecipesByUserId(ObjectId userId) async {
+    try {
+      print('=== RÉCUPÉRATION RECETTES PAR USER ID ===');
+      print('User ID: $userId');
+      await connect();
+
+      final recipesList =
+          await recipesCollection.find(where.eq('authorId', userId)).toList();
+      print(
+        'Nombre de recettes trouvées pour l\'utilisateur $userId: ${recipesList.length}',
+      );
+
+      return recipesList
+          .map((recipeData) => Recipe.fromJson(recipeData))
+          .toList();
+    } catch (e) {
+      print('❌ ERREUR récupération recettes par user ID: $e');
+      return [];
+    }
+  }
 }

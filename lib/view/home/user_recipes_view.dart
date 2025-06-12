@@ -37,15 +37,23 @@ class _UserRecipesViewState extends State<UserRecipesView> {
 
   Future<void> _loadUserRecipes() async {
     try {
-      final allRecipes = await RecipeService.instance.getAllRecipes();
+      List<Recipe> userRecipes = [];
 
-      // Filtrer les recettes de l'utilisateur
-      final userRecipes =
-          allRecipes
-              .where((recipe) => recipe.authorId == widget.user.id)
-              .toList();
+      if (widget.user.id != null) {
+        userRecipes = await RecipeService.instance.getRecipesByUserId(
+          widget.user.id!,
+        );
+      } else {
+        final allRecipes = await RecipeService.instance.getAllRecipes();
+        userRecipes =
+            allRecipes
+                .where(
+                  (recipe) =>
+                      recipe.authorId?.toString() == widget.user.id?.toString(),
+                )
+                .toList();
+      }
 
-      // Trier par date (plus récentes en premier)
       userRecipes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       setState(() {
@@ -97,7 +105,7 @@ class _UserRecipesViewState extends State<UserRecipesView> {
                 MaterialPageRoute(builder: (context) => const AddRecipeView()),
               );
               if (result == true) {
-                _loadUserRecipes(); // Recharger la liste
+                _loadUserRecipes();
               }
             },
           ),

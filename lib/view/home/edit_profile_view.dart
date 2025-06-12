@@ -44,9 +44,6 @@ class _EditProfileViewState extends State<EditProfileView> {
         createdAt: widget.user.createdAt,
       );
 
-      // Mettre à jour dans MongoDB (vous devrez implémenter cette méthode)
-      // await MongoDBService.instance.updateUser(updatedUser);
-
       // Mettre à jour la session
       await UserSession.instance.saveUserSession(updatedUser);
 
